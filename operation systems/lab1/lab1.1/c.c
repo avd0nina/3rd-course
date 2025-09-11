@@ -7,12 +7,12 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
-int global_var = 0; // global var (data)
+int global_var = 10; // global var (data)
 
 void *mythread(void *arg) {
-    int local_var = 123; // local var (stack)
-    static int static_var = 456; // local static var (data)
-    const int const_var = 789; // local const var (stack)
+    int local_var = 1; // local var (stack)
+    static int static_var = 2; // local static var (data)
+    const int const_var = 3; // local const var (stack)
 
     printf("mythread [%d %d %ld]: Hello from mythread!\n", getpid(), getppid(), gettid());
     pthread_t tid = pthread_self();
@@ -25,11 +25,18 @@ void *mythread(void *arg) {
     // pthread_create всегда совпадают, так как pthread_create записывает TID нового потока в tid[i], а pthread_self() возвращает TID текущего потока
     
     // pthread_t — непрозрачный тип, который может быть не числом, а структурой. прямое сравнение pthread_self() == tid неправильно, так как структура pthread_t зависит от реализации. pthread_equal выполянет правильное сравнение, возвращая 1 при совпадении и 0 при несовпадении
+    
+    // у локальной и константной локальной переменных разные адреса - они хранятся на стеке. каждый поток имеет собственный стек.
+    // у статической локальной и глобальной переменных одинаковые адреса - они хранятся в сегменте данных, который общий для всех потоков.
 
-    printf("Address of local_var: %p\n", &local_var);
-    printf("Address of static_var: %p\n", &static_var);
-    printf("Address of const_var: %p\n", &const_var);
-    printf("Address of global_var: %p\n", &global_var);
+    printf("Var adresses: local %p, local_static %p, local_const %p, global %p\n", &local_var, &static_var,
+              &const_var, &global_var);
+       local_var++;
+       global_var *= 2;
+       printf("local + 1 = %d, global * 2 = %d\n", local_var, global_var);
+    
+    // изменения локальной переменной не видны другим потокам, так как она хранится на стеке. это изолированная переменная
+    // глобальная переменная - разделяемая. ее изменения видны другим потокам.
 
     sleep(30);
     return NULL;
