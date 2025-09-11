@@ -21,7 +21,7 @@ int main() {
     pthread_t tid;
     int err;
     printf("main [%d %d %ld]: Hello from main!\n", getpid(), getppid(), gettid());
-    thread_args args;
+    thread_args args; // структура объявляется как локальная переменная, хранится на стеке
     args.param1 = 42;
     args.param2 = "hello world";
     err = pthread_create(&tid, NULL, mythread, &args);
