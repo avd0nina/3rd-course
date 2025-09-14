@@ -1,0 +1,9 @@
+AddMul {
+  Expr = Add
+  Add = Mul ("+" Mul)*
+  Mul = Primary ("*" Primary)*
+  Primary = number | Paren
+  Paren = "(" Expr ")"
+  number = digit+
+  space := " " | "\t" | "\n" | "\r"
+}
