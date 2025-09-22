@@ -1,0 +1,11 @@
+ReversePolishNotation {
+    Expr
+        = Expr Expr "+"  -- summ
+        | Expr Expr "*"  -- mult
+        | number         -- num
+
+    nonZeroDigit = "1".."9"
+    number
+        = "0"                  -- zero
+        | nonZeroDigit digit*  -- nz
+}
