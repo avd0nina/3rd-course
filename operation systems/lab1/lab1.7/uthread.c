@@ -4,13 +4,10 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/mman.h>
-#include <fcntl.h>
-#include <ucontext.h>
 #include <stdlib.h>
 
 #define PAGE 4096
 #define STACK_SIZE (PAGE * 8)
-#define MAX_THREADS_COUNT 8
 #define START 0
 #define FINISH 1
 
@@ -20,33 +17,11 @@ static int uthread_count = 0;
 static int uthread_cur = 0;
 static void *stacks[MAX_THREADS_COUNT];
 
-int create_stack(void **stack, off_t size, int thread_id) {
-    char stack_file[128];
-    int stack_fd;
-    snprintf(stack_file, sizeof(stack_file), "stack-%d", thread_id);
-    stack_fd = open(stack_file, O_RDWR | O_CREAT, 0660);
-    if (stack_fd == -1) {
-        fprintf(stderr, "create_stack: failed to open file: %s\n", strerror(errno));
-        return -1;
-    }
-    if (ftruncate(stack_fd, 0) == -1) {
-        fprintf(stderr, "create_stack: failed to ftruncate to 0: %s\n", strerror(errno));
-        close(stack_fd);
-        return -1;
-    }
-    if (ftruncate(stack_fd, size) == -1) {
-        fprintf(stderr, "create_stack: failed to ftruncate to size: %s\n", strerror(errno));
-        close(stack_fd);
-        return -1;
-    }
-    *stack = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_STACK, stack_fd, 0);
+int create_stack(void **stack, size_t size) {
+    *stack = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
     if (*stack == MAP_FAILED) {
         fprintf(stderr, "create_stack: failed mmap: %s\n", strerror(errno));
-        close(stack_fd);
         return -1;
-    }
-    if (close(stack_fd) == -1) {
-        fprintf(stderr, "create_stack: failed to close: %s\n", strerror(errno));
     }
     memset(*stack, 0x7f, size);
     return 0;
@@ -57,7 +32,7 @@ int uthread_init(void) {
         fprintf(stderr, "uthread_init: already initialized\n");
         return -1;
     }
-    if (create_stack(&stacks[0], STACK_SIZE, 0) == -1) {
+    if (create_stack(&stacks[0], STACK_SIZE) == -1) {
         fprintf(stderr, "uthread_init: failed to create stack\n");
         return -1;
     }
@@ -73,6 +48,7 @@ int uthread_init(void) {
     main_thread->uthread_id = 0;
     main_thread->start_routine = NULL;
     main_thread->arg = NULL;
+    main_thread->retval = NULL;
     uthreads[0] = main_thread;
     thread_finished[0] = START;
     uthread_count = 1;
@@ -84,11 +60,6 @@ void uthread_cleanup(void) {
         if (stacks[i] != NULL) {
             if (munmap(stacks[i], STACK_SIZE) == -1) {
                 fprintf(stderr, "uthread_cleanup: munmap failed for stack %d: %s\n", i, strerror(errno));
-            }
-            char stack_file[128];
-            snprintf(stack_file, sizeof(stack_file), "stack-%d", i);
-            if (unlink(stack_file) == -1) {
-                fprintf(stderr, "uthread_cleanup: unlink %s failed: %s\n", stack_file, strerror(errno));
             }
             stacks[i] = NULL;
         }
@@ -120,7 +91,7 @@ void uthread_scheduler(void) {
 void uthread_startup(void *arg) {
     uthread_struct_t *mythread = (uthread_struct_t *) arg;
     thread_finished[mythread->uthread_id] = START;
-    mythread->start_routine(mythread->arg);
+    mythread->retval = mythread->start_routine(mythread->arg); // Сохраняем возвращаемое значение
     thread_finished[mythread->uthread_id] = FINISH;
 }
 
@@ -138,17 +109,12 @@ int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg) 
         return -1;
     }
     void *stack;
-    int err = create_stack(&stack, STACK_SIZE, uthread_count);
+    int err = create_stack(&stack, STACK_SIZE);
     if (err == -1) {
         fprintf(stderr, "uthread_create: failed to create stack\n");
         return -1;
     }
     stacks[uthread_count] = stack;
-    if (mprotect(stack + PAGE, STACK_SIZE - PAGE, PROT_READ | PROT_WRITE) == -1) {
-        fprintf(stderr, "uthread_create: failed mprotect: %s\n", strerror(errno));
-        munmap(stack, STACK_SIZE);
-        return -1;
-    }
     uthread_struct_t *mythread = (uthread_struct_t *)((char *)stack + STACK_SIZE - sizeof(uthread_struct_t));
     err = getcontext(&mythread->ucontext);
     if (err == -1) {
@@ -163,6 +129,7 @@ int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg) 
     mythread->uthread_id = uthread_count;
     mythread->start_routine = start_routine;
     mythread->arg = arg;
+    mythread->retval = NULL;
     uthreads[uthread_count] = mythread;
     uthread_count++;
     *thread = mythread;
@@ -178,7 +145,7 @@ int uthread_join(uthread_t thread, void **retval) {
         uthread_scheduler();
     }
     if (retval) {
-        *retval = thread->arg;
+        *retval = thread->retval; // Возвращаем сохранённое значение
     }
     return 0;
 }
