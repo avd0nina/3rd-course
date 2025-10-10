@@ -11,6 +11,7 @@ typedef struct uthread_struct {
     int uthread_id;
     start_routine_t start_routine;
     void *arg;
+    void *retval;
     ucontext_t ucontext;
 } uthread_struct_t;
 
@@ -20,6 +21,7 @@ int uthread_init(void);
 int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg);
 int uthread_join(uthread_t thread, void **retval);
 void uthread_scheduler(void);
-void uthread_cleanup(void); 
+void uthread_cleanup(void);
+int create_stack(void **stack, size_t size);
 
 #endif // UTHREAD_H
