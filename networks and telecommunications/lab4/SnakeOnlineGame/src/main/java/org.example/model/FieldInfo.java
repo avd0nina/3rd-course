@@ -3,7 +3,6 @@ package org.example.model;
 import org.example.model.threads.master.MasterActionThread;
 import org.example.model.threads.master.MasterThread;
 import protobuf.SnakesProto;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -163,7 +162,7 @@ public class FieldInfo {
             foods.add(new Point(food.getX(), food.getY()));
         }
     }
-    
+
     public void masterStart() {
         thread = new MasterActionThread(this, delay);
         thread.start();
@@ -232,7 +231,7 @@ public class FieldInfo {
         }
     }
 
-    private void fillSquareAround(Point point) { 
+    private void fillSquareAround(Point point) {
         for (int i = point.x - 2; i <= point.x + 2; ++i) {
             int I = i >= 0 ? i : width + i;
             I = I < width ? I : I % width;
@@ -483,7 +482,7 @@ public class FieldInfo {
         return false;
     }
 
-    public SnakesProto.GameState getGameState() { 
+    public SnakesProto.GameState getGameState() {
         SnakesProto.GameState.Builder state = SnakesProto.GameState.newBuilder();
 
         SnakesProto.GamePlayers.Builder gamePlayers = SnakesProto.GamePlayers.newBuilder();
