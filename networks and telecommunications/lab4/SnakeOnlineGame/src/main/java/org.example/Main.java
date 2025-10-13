@@ -7,7 +7,6 @@ public class Main {
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(Main.class.getSimpleName());
         logger.info("Game is starting!" );
-
         new Model();
     }
 }
