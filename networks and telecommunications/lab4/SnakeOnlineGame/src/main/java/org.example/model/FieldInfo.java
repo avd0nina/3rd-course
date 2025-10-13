@@ -484,7 +484,6 @@ public class FieldInfo {
 
     public SnakesProto.GameState getGameState() {
         SnakesProto.GameState.Builder state = SnakesProto.GameState.newBuilder();
-
         SnakesProto.GamePlayers.Builder gamePlayers = SnakesProto.GamePlayers.newBuilder();
         synchronized (players) {
             for (Player player : players) {
