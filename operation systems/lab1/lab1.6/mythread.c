@@ -11,6 +11,7 @@
 
 #define PAGE 4096
 #define STACK_SIZE (PAGE * 8)
+#define GUARD_PAGE PAGE
 
 static int thread_num = 0;
 
@@ -22,12 +23,18 @@ int mythread_startup(void *arg) {
 }
 
 int create_stack(void **stack, size_t size) {
-    *stack = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
+    size_t total_size = size + GUARD_PAGE;
+    *stack = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
     if (*stack == MAP_FAILED) {
         fprintf(stderr, "create_stack: failed mmap: %s\n", strerror(errno));
         return -1;
     }
-    memset(*stack, 0x7f, size);
+    if (mprotect(*stack, GUARD_PAGE, PROT_NONE) == -1) {
+        fprintf(stderr, "create_stack: failed mprotect: %s\n", strerror(errno));
+        munmap(*stack, total_size);
+        return -1;
+    }
+    memset((char *)*stack + GUARD_PAGE, 0x7f, size);
     return 0;
 }
 
@@ -44,25 +51,26 @@ int mythread_create(mythread_t *thread, start_routine_t start_routine, void *arg
     mythread_struct_t *mythread = (mythread_struct_t *)malloc(sizeof(mythread_struct_t));
     if (!mythread) {
         fprintf(stderr, "mythread_create: malloc failed\n");
-        munmap(child_stack, STACK_SIZE);
+        munmap(child_stack, STACK_SIZE + GUARD_PAGE);
         return -1;
     }
     
     mythread->mythread_id = thread_num++;
     mythread->start_routine = start_routine;
     mythread->arg = arg;
-    mythread->joined = 0;
     mythread->exited = 0;
     mythread->retval = NULL;
+    mythread->stack = child_stack;
+    mythread->stack_size = STACK_SIZE + GUARD_PAGE;
 
-    void *stack_top = (char *)child_stack + STACK_SIZE;
+    void *stack_top = (char *)child_stack + STACK_SIZE + GUARD_PAGE;
     stack_top = (void *)((unsigned long)stack_top & ~0xF);
     
     int child_pid = clone(mythread_startup, stack_top, CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_THREAD, (void *)mythread);
     if (child_pid == -1) {
         fprintf(stderr, "mythread_create: clone failed: %s\n", strerror(errno));
         free(mythread);
-        munmap(child_stack, STACK_SIZE);
+        munmap(child_stack, STACK_SIZE + GUARD_PAGE);
         return -1;
     }
     *thread = mythread;
@@ -77,7 +85,9 @@ int mythread_join(mythread_t thread, void **retval) {
     if (retval) {
         *retval = mythread->retval;
     }
-    mythread->joined = 1;
+    if (mythread->stack) {
+        munmap(mythread->stack, mythread->stack_size);
+    }
     free(mythread);
     return 0;
 }
