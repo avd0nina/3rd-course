@@ -1,46 +1,48 @@
 CC = gcc
-CFLAGS = -Wall -g -D_GNU_SOURCE
-LDFLAGS = -pthread
+CFLAGS = -Wall -Wextra -Werror -g -D_GNU_SOURCE -fPIC -fsanitize=address -fsanitize=leak -I.
+LDFLAGS = -L. -Wl,-rpath,.
+SHFLAGS = -shared
 
-all: libuthread.a test1 test2 test3 test4 test5
+all: libmythread.so test1 test2 test3 test4 test5
 
-libuthread.a: uthread.o
-	ar rcs $@ $^
+libmythread.so: mythread.o
+	$(CC) $(SHFLAGS) -o $@ $^
 
-uthread.o: uthread.c uthread.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -c $<
+mythread.o: mythread.c mythread.h
+	$(CC) $(CFLAGS) -c mythread.c
 
-test1: test1.o libuthread.a
-	$(CC) $(CFLAGS) -o $@ test1.o -L. -luthread $(LDFLAGS)
+test1: tests/test1.o libmythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test1.o $(LDFLAGS) -lmythread
 
-test1.o: test1.c uthread.h
-	$(CC) $(CFLAGS) -c $<
+test1.o: tests/test1.c mythread.h
+	$(CC) $(CFLAGS) -c tests/test1.c -o tests/test1.o
 
-test2: test2.o libuthread.a
-	$(CC) $(CFLAGS) -o $@ test2.o -L. -luthread $(LDFLAGS)
+test2: tests/test2.o libmythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test2.o $(LDFLAGS) -lmythread
 
-test2.o: test2.c uthread.h
-	$(CC) $(CFLAGS) -c $<
+test2.o: tests/test2.c mythread.h
+	$(CC) $(CFLAGS) -c tests/test2.c -o tests/test2.o
 
-test3: test3.o libuthread.a
-	$(CC) $(CFLAGS) -o $@ test3.o -L. -luthread $(LDFLAGS)
+test3: tests/test3.o libmythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test3.o $(LDFLAGS) -lmythread
 
-test3.o: test3.c uthread.h
-	$(CC) $(CFLAGS) -c $<
+test3.o: tests/test3.c mythread.h
+	$(CC) $(CFLAGS) -c tests/test3.c -o tests/test3.o
 
-test4: test4.o libuthread.a
-	$(CC) $(CFLAGS) -o $@ test4.o -L. -luthread $(LDFLAGS)
+test4: tests/test4.o libmythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test4.o $(LDFLAGS) -lmythread
 
-test4.o: test4.c uthread.h
-	$(CC) $(CFLAGS) -c $<
+test4.o: tests/test4.c mythread.h
+	$(CC) $(CFLAGS) -c tests/test4.c -o tests/test4.o
 
-test5: test5.o libuthread.a
-	$(CC) $(CFLAGS) -o $@ test5.o -L. -luthread $(LDFLAGS)
+test5: tests/test5.o libmythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test5.o $(LDFLAGS) -lmythread
 
-test5.o: test5.c uthread.h
-	$(CC) $(CFLAGS) -c $<
+test5.o: tests/test5.c mythread.h
+	$(CC) $(CFLAGS) -c tests/test5.c -o tests/test5.o
 
 clean:
-	rm -f *.o *.a test1 test2 test3 test4 test5 stack-*
+	rm -f *.o *.so *.a tests/*.o test1 test2 test3 test4 test5 stack-* test2.c.save test2.c.save.*
 
-.PHONY: all clean
+run: all
+	./test1 && ./test2 && ./test2.1 && ./test2.2 && ./test3 && ./test4 && ./test5
