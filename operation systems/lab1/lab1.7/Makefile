@@ -3,42 +3,42 @@ CFLAGS = -Wall -Wextra -Werror -g -D_GNU_SOURCE -fPIC -fsanitize=address -fsanit
 LDFLAGS = -L. -Wl,-rpath,.
 SHFLAGS = -shared
 
-all: libmythread.so test1 test2 test3 test4 test5
+all: libuthread.so test1 test2 test3 test4 test5
 
-libmythread.so: mythread.o
+libuthread.so: uthread.o
 	$(CC) $(SHFLAGS) -o $@ $^
 
-mythread.o: mythread.c mythread.h
-	$(CC) $(CFLAGS) -c mythread.c
+uthread.o: uthread.c uthread.h
+	$(CC) $(CFLAGS) -c uthread.c
 
-test1: tests/test1.o libmythread.so
-	$(CC) $(CFLAGS) -o $@ tests/test1.o $(LDFLAGS) -lmythread
+test1: tests/test1.o libuthread.so
+	$(CC) $(CFLAGS) -o $@ tests/test1.o $(LDFLAGS) -luthread
 
-test1.o: tests/test1.c mythread.h
+test1.o: tests/test1.c uthread.h
 	$(CC) $(CFLAGS) -c tests/test1.c -o tests/test1.o
 
-test2: tests/test2.o libmythread.so
-	$(CC) $(CFLAGS) -o $@ tests/test2.o $(LDFLAGS) -lmythread
+test2: tests/test2.o libuthread.so
+	$(CC) $(CFLAGS) -o $@ tests/test2.o $(LDFLAGS) -luthread
 
-test2.o: tests/test2.c mythread.h
+test2.o: tests/test2.c uthread.h
 	$(CC) $(CFLAGS) -c tests/test2.c -o tests/test2.o
 
-test3: tests/test3.o libmythread.so
-	$(CC) $(CFLAGS) -o $@ tests/test3.o $(LDFLAGS) -lmythread
+test3: tests/test3.o uthread.so
+	$(CC) $(CFLAGS) -o $@ tests/test3.o $(LDFLAGS) -luthread
 
-test3.o: tests/test3.c mythread.h
+test3.o: tests/test3.c uthread.h
 	$(CC) $(CFLAGS) -c tests/test3.c -o tests/test3.o
 
-test4: tests/test4.o libmythread.so
-	$(CC) $(CFLAGS) -o $@ tests/test4.o $(LDFLAGS) -lmythread
+test4: tests/test4.o umythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test4.o $(LDFLAGS) -luthread
 
-test4.o: tests/test4.c mythread.h
+test4.o: tests/test4.c uthread.h
 	$(CC) $(CFLAGS) -c tests/test4.c -o tests/test4.o
 
-test5: tests/test5.o libmythread.so
-	$(CC) $(CFLAGS) -o $@ tests/test5.o $(LDFLAGS) -lmythread
+test5: tests/test5.o umythread.so
+	$(CC) $(CFLAGS) -o $@ tests/test5.o $(LDFLAGS) -luthread
 
-test5.o: tests/test5.c mythread.h
+test5.o: tests/test5.c uthread.h
 	$(CC) $(CFLAGS) -c tests/test5.c -o tests/test5.o
 
 clean:
