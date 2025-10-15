@@ -1,6 +1,8 @@
 #ifndef MYTHREAD_H
 #define MYTHREAD_H
 
+#include <stddef.h>
+
 typedef void *(*start_routine_t)(void *);
 
 typedef struct {
@@ -8,8 +10,9 @@ typedef struct {
     start_routine_t start_routine;
     void *arg;
     void *retval;
-    volatile int joined;
     volatile int exited;
+    void *stack;
+    size_t stack_size;
 } mythread_struct_t;
 
 typedef mythread_struct_t *mythread_t;
