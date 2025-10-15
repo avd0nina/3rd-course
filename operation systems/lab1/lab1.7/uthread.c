@@ -5,17 +5,31 @@
 #include <errno.h>
 #include <sys/mman.h>
 #include <stdlib.h>
+#include <stdatomic.h>
 
 #define PAGE 4096
 #define STACK_SIZE (PAGE * 8)
-#define START 0
-#define FINISH 1
+#define NUM_WORKERS 4
 
-static uthread_struct_t *uthreads[MAX_THREADS_COUNT];
-static int thread_finished[MAX_THREADS_COUNT];
+typedef struct worker {
+    pthread_t thread;
+    pthread_mutex_t mutex;
+    pthread_cond_t cond;
+    ucontext_t sched_ctx;
+    void *sched_stack;
+    uthread_t ready[MAX_THREADS_COUNT];
+    int ready_count;
+} worker_t;
+
+static worker_t workers[NUM_WORKERS];
+static pthread_key_t worker_key;
+static pthread_key_t current_thread_key;
+static int initialized = 0;
 static int uthread_count = 0;
-static int uthread_cur = 0;
-static void *stacks[MAX_THREADS_COUNT];
+static void *user_stacks[MAX_THREADS_COUNT];
+static uthread_t all_threads[MAX_THREADS_COUNT];
+static int next_worker = 0;
+static volatile int shutdown_flag = 0;
 
 int create_stack(void **stack, size_t size) {
     *stack = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
@@ -27,76 +41,96 @@ int create_stack(void **stack, size_t size) {
     return 0;
 }
 
+static void uthread_startup(void *arg) {
+    uthread_t mythread = (uthread_t)arg;
+    mythread->retval = mythread->start_routine(mythread->arg);
+    mythread->state = STATE_FINISHED;
+    pthread_mutex_lock(&mythread->join_mutex);
+    pthread_cond_broadcast(&mythread->join_cond);
+    pthread_mutex_unlock(&mythread->join_mutex);
+}
+
+static void scheduler_loop(int wid) {
+    worker_t *w = &workers[wid];
+    while (!shutdown_flag) {
+        pthread_mutex_lock(&w->mutex);
+        while (w->ready_count == 0 && !shutdown_flag) {
+            pthread_cond_wait(&w->cond, &w->mutex);
+        }
+        if (shutdown_flag) {
+            pthread_mutex_unlock(&w->mutex);
+            break;
+        }
+        uthread_t next = w->ready[--w->ready_count];
+        pthread_mutex_unlock(&w->mutex);
+
+        pthread_setspecific(current_thread_key, next);
+        next->state = STATE_RUNNING;
+        swapcontext(&w->sched_ctx, &next->ucontext);
+
+        if (next->state != STATE_FINISHED) {
+            pthread_mutex_lock(&w->mutex);
+            if (!shutdown_flag) {
+                w->ready[w->ready_count++] = next;
+            }
+            pthread_mutex_unlock(&w->mutex);
+        }
+    }
+}
+
+static void *worker_func(void *arg) {
+    int wid = (int)(long)arg;
+    worker_t *w = &workers[wid];
+    pthread_setspecific(worker_key, w);
+
+    if (create_stack(&w->sched_stack, STACK_SIZE) == -1) {
+        fprintf(stderr, "worker_func: failed to create sched stack\n");
+        return NULL;
+    }
+
+    if (getcontext(&w->sched_ctx) == -1) {
+        perror("getcontext");
+        return NULL;
+    }
+    w->sched_ctx.uc_stack.ss_sp = w->sched_stack;
+    w->sched_ctx.uc_stack.ss_size = STACK_SIZE;
+    w->sched_ctx.uc_link = NULL;
+    makecontext(&w->sched_ctx, (void (*)(void))scheduler_loop, 1, wid);
+
+    setcontext(&w->sched_ctx);
+    fprintf(stderr, "worker_func: setcontext failed\n");
+    return NULL;
+}
+
 int uthread_init(void) {
-    if (uthread_count != 0) {
+    if (initialized) {
         fprintf(stderr, "uthread_init: already initialized\n");
         return -1;
     }
-    if (create_stack(&stacks[0], STACK_SIZE) == -1) {
-        fprintf(stderr, "uthread_init: failed to create stack\n");
+    if (pthread_key_create(&worker_key, NULL) != 0 || pthread_key_create(&current_thread_key, NULL) != 0) {
         return -1;
     }
-    uthread_struct_t *main_thread = (uthread_struct_t *)((char *)stacks[0] + STACK_SIZE - sizeof(uthread_struct_t));
-    if (getcontext(&main_thread->ucontext) == -1) {
-        fprintf(stderr, "uthread_init: getcontext failed: %s\n", strerror(errno));
-        munmap(stacks[0], STACK_SIZE);
-        return -1;
+    shutdown_flag = 0;
+    next_worker = 0;
+    uthread_count = 0;
+
+    for (int i = 0; i < NUM_WORKERS; i++) {
+        if (pthread_mutex_init(&workers[i].mutex, NULL) != 0 ||
+            pthread_cond_init(&workers[i].cond, NULL) != 0) {
+            return -1;
+        }
+        workers[i].ready_count = 0;
+        if (pthread_create(&workers[i].thread, NULL, worker_func, (void *)(long)i) != 0) {
+            fprintf(stderr, "uthread_init: failed to create worker %d\n", i);
+            return -1;
+        }
     }
-    main_thread->ucontext.uc_stack.ss_sp = stacks[0];
-    main_thread->ucontext.uc_stack.ss_size = STACK_SIZE - sizeof(uthread_struct_t);
-    main_thread->ucontext.uc_link = NULL;
-    main_thread->uthread_id = 0;
-    main_thread->start_routine = NULL;
-    main_thread->arg = NULL;
-    main_thread->retval = NULL;
-    uthreads[0] = main_thread;
-    thread_finished[0] = START;
-    uthread_count = 1;
+    initialized = 1;
     return 0;
 }
 
-void uthread_cleanup(void) {
-    for (int i = 0; i < uthread_count; i++) {
-        if (stacks[i] != NULL) {
-            if (munmap(stacks[i], STACK_SIZE) == -1) {
-                fprintf(stderr, "uthread_cleanup: munmap failed for stack %d: %s\n", i, strerror(errno));
-            }
-            stacks[i] = NULL;
-        }
-    }
-    uthread_count = 0;
-    uthread_cur = 0;
-}
-
-void uthread_scheduler(void) {
-    if (uthread_count <= 1) return;
-    int err;
-    ucontext_t *cur_context = &(uthreads[uthread_cur]->ucontext);
-    int prev = uthread_cur;
-    uthread_cur = (uthread_cur + 1) % uthread_count;
-    while (uthread_cur != prev && thread_finished[uthread_cur] == FINISH) {
-        uthread_cur = (uthread_cur + 1) % uthread_count;
-    }
-    if (uthread_cur == prev && thread_finished[prev] == FINISH) {
-        return;
-    }
-    ucontext_t *next_context = &(uthreads[uthread_cur]->ucontext);
-    err = swapcontext(cur_context, next_context);
-    if (err == -1) {
-        fprintf(stderr, "uthread_scheduler: swapcontext failed: %s\n", strerror(errno));
-        exit(1);
-    }
-}
-
-void uthread_startup(void *arg) {
-    uthread_struct_t *mythread = (uthread_struct_t *) arg;
-    thread_finished[mythread->uthread_id] = START;
-    mythread->retval = mythread->start_routine(mythread->arg); // Сохраняем возвращаемое значение
-    thread_finished[mythread->uthread_id] = FINISH;
-}
-
 int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg) {
-    if (uthread_count == 0) {
+    if (!initialized) {
         fprintf(stderr, "uthread_create: library not initialized\n");
         return -1;
     }
@@ -108,31 +142,45 @@ int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg) 
         fprintf(stderr, "uthread_create: max threads count exceeded\n");
         return -1;
     }
-    void *stack;
-    int err = create_stack(&stack, STACK_SIZE);
-    if (err == -1) {
-        fprintf(stderr, "uthread_create: failed to create stack\n");
+
+    int wid = __sync_fetch_and_add(&next_worker, 1) % NUM_WORKERS;
+    void *stack = NULL;
+    if (create_stack(&stack, STACK_SIZE) == -1) {
         return -1;
     }
-    stacks[uthread_count] = stack;
-    uthread_struct_t *mythread = (uthread_struct_t *)((char *)stack + STACK_SIZE - sizeof(uthread_struct_t));
-    err = getcontext(&mythread->ucontext);
-    if (err == -1) {
-        fprintf(stderr, "uthread_create: getcontext failed: %s\n", strerror(errno));
+    uthread_t new_thread = (uthread_t)((char *)stack + STACK_SIZE - sizeof(uthread_struct_t));
+    new_thread->uthread_id = uthread_count;
+    new_thread->start_routine = start_routine;
+    new_thread->arg = arg;
+    new_thread->retval = NULL;
+    new_thread->state = STATE_READY;
+
+    if (pthread_mutex_init(&new_thread->join_mutex, NULL) != 0 ||
+        pthread_cond_init(&new_thread->join_cond, NULL) != 0) {
         munmap(stack, STACK_SIZE);
         return -1;
     }
-    mythread->ucontext.uc_stack.ss_sp = stack;
-    mythread->ucontext.uc_stack.ss_size = STACK_SIZE - sizeof(uthread_struct_t);
-    mythread->ucontext.uc_link = &uthreads[0]->ucontext;
-    makecontext(&mythread->ucontext, (void (*)(void)) uthread_startup, 1, mythread);
-    mythread->uthread_id = uthread_count;
-    mythread->start_routine = start_routine;
-    mythread->arg = arg;
-    mythread->retval = NULL;
-    uthreads[uthread_count] = mythread;
+
+    if (getcontext(&new_thread->ucontext) == -1) {
+        pthread_mutex_destroy(&new_thread->join_mutex);
+        pthread_cond_destroy(&new_thread->join_cond);
+        munmap(stack, STACK_SIZE);
+        return -1;
+    }
+    new_thread->ucontext.uc_stack.ss_sp = stack;
+    new_thread->ucontext.uc_stack.ss_size = STACK_SIZE - sizeof(uthread_struct_t);
+    new_thread->ucontext.uc_link = &workers[wid].sched_ctx;
+    makecontext(&new_thread->ucontext, (void (*)(void))uthread_startup, 1, new_thread);
+
+    pthread_mutex_lock(&workers[wid].mutex);
+    all_threads[uthread_count] = new_thread;
+    user_stacks[uthread_count] = stack;
+    workers[wid].ready[workers[wid].ready_count++] = new_thread;
     uthread_count++;
-    *thread = mythread;
+    pthread_cond_signal(&workers[wid].cond);
+    pthread_mutex_unlock(&workers[wid].mutex);
+
+    *thread = new_thread;
     return 0;
 }
 
@@ -141,11 +189,44 @@ int uthread_join(uthread_t thread, void **retval) {
         fprintf(stderr, "uthread_join: thread is NULL\n");
         return -1;
     }
-    while (thread_finished[thread->uthread_id] != FINISH) {
-        uthread_scheduler();
+    pthread_mutex_lock(&thread->join_mutex);
+    while (thread->state != STATE_FINISHED) {
+        pthread_cond_wait(&thread->join_cond, &thread->join_mutex);
     }
+    pthread_mutex_unlock(&thread->join_mutex);
     if (retval) {
-        *retval = thread->retval; // Возвращаем сохранённое значение
+        *retval = thread->retval;
     }
     return 0;
+}
+
+void uthread_scheduler(void) {
+    uthread_t self = (uthread_t)pthread_getspecific(current_thread_key);
+    if (self == NULL) return;
+    worker_t *w = (worker_t *)pthread_getspecific(worker_key);
+    if (w == NULL) return;
+    self->state = STATE_READY;
+    swapcontext(&self->ucontext, &w->sched_ctx);
+}
+
+void uthread_cleanup(void) {
+    if (!initialized) return;
+    shutdown_flag = 1;
+    for (int i = 0; i < NUM_WORKERS; i++) {
+        pthread_mutex_lock(&workers[i].mutex);
+        pthread_cond_broadcast(&workers[i].cond);
+        pthread_mutex_unlock(&workers[i].mutex);
+        pthread_join(workers[i].thread, NULL);
+        munmap(workers[i].sched_stack, STACK_SIZE);
+        pthread_mutex_destroy(&workers[i].mutex);
+        pthread_cond_destroy(&workers[i].cond);
+    }
+    for (int i = 0; i < uthread_count; i++) {
+        pthread_mutex_destroy(&all_threads[i]->join_mutex);
+        pthread_cond_destroy(&all_threads[i]->join_cond);
+        munmap(user_stacks[i], STACK_SIZE);
+    }
+    pthread_key_delete(worker_key);
+    pthread_key_delete(current_thread_key);
+    initialized = 0;
 }
