@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -g -D_GNU_SOURCE
-LDFLAGS = -L.
+LDFLAGS = -pthread
 
 all: libuthread.a test1 test2 test3 test4 test5
 
