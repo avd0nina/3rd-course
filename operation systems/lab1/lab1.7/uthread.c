@@ -11,6 +11,9 @@
 #define STACK_SIZE (PAGE * 8)
 #define NUM_WORKERS 4
 
+/**
+ * Структура для хранения состояния воркера.
+ */
 typedef struct worker {
     pthread_t thread;
     pthread_mutex_t mutex;
@@ -31,6 +34,12 @@ static uthread_t all_threads[MAX_THREADS_COUNT];
 static int next_worker = 0;
 static volatile int shutdown_flag = 0;
 
+/**
+ * Выделяет память для стека с помощью mmap.
+ * @param stack Указатель для хранения адреса стека.
+ * @param size Размер стека.
+ * @return 0 при успехе, -1 при ошибке.
+ */
 int create_stack(void **stack, size_t size) {
     *stack = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
     if (*stack == MAP_FAILED) {
@@ -41,6 +50,10 @@ int create_stack(void **stack, size_t size) {
     return 0;
 }
 
+/**
+ * Запускает функцию корутины и управляет её состоянием.
+ * @param arg Указатель на структуру корутины (uthread_t).
+ */
 static void uthread_startup(void *arg) {
     uthread_t mythread = (uthread_t)arg;
     mythread->retval = mythread->start_routine(mythread->arg);
@@ -50,6 +63,10 @@ static void uthread_startup(void *arg) {
     pthread_mutex_unlock(&mythread->join_mutex);
 }
 
+/**
+ * Основной цикл шедулера для воркера.
+ * @param wid Идентификатор воркера.
+ */
 static void scheduler_loop(int wid) {
     worker_t *w = &workers[wid];
     while (!shutdown_flag) {
@@ -78,6 +95,11 @@ static void scheduler_loop(int wid) {
     }
 }
 
+/**
+ * Функция воркера, инициализирующая шедулер.
+ * @param arg Идентификатор воркера (int).
+ * @return NULL при завершении.
+ */
 static void *worker_func(void *arg) {
     int wid = (int)(long)arg;
     worker_t *w = &workers[wid];
@@ -102,6 +124,10 @@ static void *worker_func(void *arg) {
     return NULL;
 }
 
+/**
+ * Инициализирует библиотеку, создавая пул воркеров.
+ * @return 0 при успехе, -1 при ошибке.
+ */
 int uthread_init(void) {
     if (initialized) {
         fprintf(stderr, "uthread_init: already initialized\n");
@@ -129,6 +155,13 @@ int uthread_init(void) {
     return 0;
 }
 
+/**
+ * Создаёт новую корутину и добавляет её в очередь воркера.
+ * @param thread Указатель для хранения дескриптора корутины.
+ * @param start_routine Функция, выполняемая корутиной.
+ * @param arg Аргумент для функции корутины.
+ * @return 0 при успехе, -1 при ошибке.
+ */
 int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg) {
     if (!initialized) {
         fprintf(stderr, "uthread_create: library not initialized\n");
@@ -184,6 +217,12 @@ int uthread_create(uthread_t *thread, start_routine_t start_routine, void *arg) 
     return 0;
 }
 
+/**
+ * Ожидает завершения корутины и возвращает её результат.
+ * @param thread Дескриптор корутины.
+ * @param retval Указатель для хранения возвращаемого значения (может быть NULL).
+ * @return 0 при успехе, -1 при ошибке.
+ */
 int uthread_join(uthread_t thread, void **retval) {
     if (thread == NULL) {
         fprintf(stderr, "uthread_join: thread is NULL\n");
@@ -200,6 +239,9 @@ int uthread_join(uthread_t thread, void **retval) {
     return 0;
 }
 
+/**
+ * Передаёт управление шедулеру воркера.
+ */
 void uthread_scheduler(void) {
     uthread_t self = (uthread_t)pthread_getspecific(current_thread_key);
     if (self == NULL) return;
@@ -209,6 +251,9 @@ void uthread_scheduler(void) {
     swapcontext(&self->ucontext, &w->sched_ctx);
 }
 
+/**
+ * Очищает ресурсы библиотеки, завершая воркеры и освобождая память.
+ */
 void uthread_cleanup(void) {
     if (!initialized) return;
     shutdown_flag = 1;
