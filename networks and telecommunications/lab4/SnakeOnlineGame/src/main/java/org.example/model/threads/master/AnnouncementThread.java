@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AnnouncementThread extends Thread {
-    private final AtomicBoolean isRunning = new AtomicBoolean(true);
+    private boolean isRunning = true;
     private final MasterThread masterThread;
     private SnakesProto.GameAnnouncement gameAnnouncement;
     private final List<SnakesProto.GamePlayer> players;
@@ -61,7 +61,7 @@ public class AnnouncementThread extends Thread {
 
     @Override
     public void run() {
-        while (isRunning.get()) {
+        while (isRunning) {
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
@@ -72,6 +72,6 @@ public class AnnouncementThread extends Thread {
     }
 
     public void setStopped() {
-        isRunning.set(false);
+        isRunning = false;
     }
 }
