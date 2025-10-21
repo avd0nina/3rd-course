@@ -50,7 +50,7 @@ public class AnnouncementThread extends Thread {
 
     public void deletePlayer(int ID) {
         synchronized (players) {
-            for(SnakesProto.GamePlayer player : players) {
+            for (SnakesProto.GamePlayer player : players) {
                 if (player.getId() == ID) {
                     players.remove(player);
                     return;
