@@ -20,7 +20,7 @@ public class GamesListener extends Thread {
         server = new MulticastSocket(MULTICAST_PORT);
         String MULTICAST_ADDRESS = "239.192.0.4";
         InetAddress multicastAddress = InetAddress.getByName(MULTICAST_ADDRESS);
-        NetworkInterface networkInterface = NetworkInterface.getByName("null");
+        NetworkInterface networkInterface = null;
         server.joinGroup(new java.net.InetSocketAddress(multicastAddress, MULTICAST_PORT), networkInterface);
         server.setSoTimeout(1000);
         this.model = model;
