@@ -110,7 +110,7 @@ public class ClientThread extends Thread implements GameThread {
                                 .setMsgSeq(gameMessage.getMsgSeq()).build();
                         sendMessage(answer, packet.getAddress().getHostAddress(), packet.getPort());
                     }
-                    LogRecord record = new LogRecord(Level.INFO, "received from: {0}, addr = {1}, message type: {1}");
+                    LogRecord record = new LogRecord(Level.INFO, "received from: {0}, addr = {1}, message type: {2}");
                     record.setParameters(new Object[]{packet.getSocketAddress(),
                             ((InetSocketAddress) packet.getSocketAddress()).getAddress(),
                             gameMessage.getTypeCase()});
