@@ -23,7 +23,6 @@ public class GameDisplayThread extends Thread {
             model.showActiveGames();
         }
     }
-
     public void setStopped() {
         isRunning = false;
     }
