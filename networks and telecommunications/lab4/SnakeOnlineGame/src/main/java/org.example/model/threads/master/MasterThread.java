@@ -63,7 +63,7 @@ public class MasterThread extends Thread implements GameThread {
                 gameMessage = SnakesProto.GameMessage
                         .parseFrom(Arrays.copyOfRange(packet.getData(), 0, packet.getLength()));
             } catch (InvalidProtocolBufferException e) {
-                logger.info("{}: Server couldn't parse a msg");
+                logger.info("{}: Server couldn't parse a message");
                 continue;
             }
             switch (gameMessage.getTypeCase()) {
@@ -350,7 +350,7 @@ public class MasterThread extends Thread implements GameThread {
             packet.setPort(port);
             socket.send(packet);
             LogRecord record = new LogRecord(Level.INFO,
-                    "send to: {0}, addr = {1}, msg type: {2}");
+                    "send to: {0}, addr = {1}, message type: {2}");
             record.setParameters(new Object[]{
                     packet.getSocketAddress(),
                     ((InetSocketAddress) packet.getSocketAddress()).getAddress(),
