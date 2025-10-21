@@ -43,7 +43,7 @@ public class GamesListener extends Thread {
                 byte[] data = packet.getData();
                 message = SnakesProto.GameMessage.parseFrom(Arrays.copyOfRange(data, 0, packet.getLength()));
             } catch (InvalidProtocolBufferException e) {
-                logger.info("{}: Server couldn't parse a msg");
+                logger.info("{}: Server couldn't parse a message");
                 continue;
             }
             if (message.getTypeCase() != SnakesProto.GameMessage.TypeCase.ANNOUNCEMENT) {
