@@ -21,20 +21,20 @@ public class Model {
     private final List<GameInfo> activeGames;
 
     public Model() {
-        logger.info("init a model");
+        logger.info("Init a model");
         viewBase = new ViewBase(this);
-        logger.info("model initiated successfully");
+        logger.info("Model initiated successfully");
         try {
             listener = new GamesListener(this);
             listener.start();
-            logger.info("listener starts");
+            logger.info("Listener starts");
         } catch (IOException e) {
             logger.info("{}: error in starting a listener");
         }
         activeGames = new ArrayList<>();
         gameShower = new GameDisplayThread(this);
         gameShower.start();
-        logger.info("game display started");
+        logger.info("Game display started");
     }
 
     public void showActiveGames() {
@@ -99,8 +99,7 @@ public class Model {
             }
         }
     }
-
-
+    
     public void showMessage(String message) {
         viewBase.showMessage(message);
     }
