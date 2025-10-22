@@ -28,9 +28,9 @@ public class GameFrame {
         }
     }
 
-    public GameFrame(ViewBase viewBase, GameInfo gameInfo, int width, int height) {
+    public GameFrame (ViewBase viewBase, GameInfo gameInfo, int width, int height) {
         this.viewBase = viewBase;
-        mainWindow = new JFrame("MySnake game :[" + gameInfo.getGameName() + "]");
+        mainWindow = new JFrame("Snake Online Game :[" + gameInfo.getGameName() + "]");
         JPanel mainPanel = getMainPanel(width, height);
         mainWindow.setContentPane(mainPanel);
         mainWindow.setMinimumSize(new Dimension(1000, 850));
@@ -77,11 +77,11 @@ public class GameFrame {
         playerArea = new PlayerScorePanel();
         rightPanel.add(playerArea, BorderLayout.NORTH);
         JButton backButton = new JButton("Back");
-        backButton.setBackground(Color.decode("#390040"));
-        backButton.setForeground(Color.WHITE);
+        backButton.setBackground(Color.WHITE);
+        backButton.setForeground(Color.BLACK);
         backButton.setActionCommand("back");
         backButton.addActionListener(e -> handleBackButton());
-        backButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+        backButton.setFont(new Font("Arial", Font.PLAIN, 16));
         rightPanel.add(backButton, BorderLayout.SOUTH);
         panel.add(rightPanel, BorderLayout.CENTER);
         return panel;
