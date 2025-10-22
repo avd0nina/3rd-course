@@ -20,7 +20,7 @@ public class AvailableGamesPanel extends JPanel implements ActionListener {
         mainWindow = parent;
         constraints.insets = new Insets(2, 5, 2, 5);
         JLabel gameNameLabel = new JLabel(game.getGameName());
-        gameNameLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+        gameNameLabel.setFont(new Font("Arial", Font.BOLD, 12));
         gameNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
         constraints.gridy = 0;
         constraints.gridx = 0;
@@ -29,7 +29,7 @@ public class AvailableGamesPanel extends JPanel implements ActionListener {
         constraints.anchor = GridBagConstraints.WEST;
         add(gameNameLabel, constraints);
         JLabel playersLabel = new JLabel("Players count: " + game.getPlayerCount());
-        playersLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        playersLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         gameNameLabel.setHorizontalAlignment(SwingConstants.LEFT);
         constraints.gridy = 1;
         constraints.gridx = 0;
