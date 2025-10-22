@@ -27,7 +27,6 @@ public class SmoothSnakeRenderer {
                 currentSegment.add(point);
             }
         }
-
         if (!currentSegment.isEmpty() && currentSegment.size() > 1) {
             segments.add(currentSegment);
         }
