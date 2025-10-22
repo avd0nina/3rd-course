@@ -10,15 +10,14 @@ public class ActiveGamesPanel extends JPanel {
     private final JPanel activeGames;
 
     public ActiveGamesPanel() {
-        setPreferredSize(new Dimension(250, 300));
-        setMinimumSize(new Dimension(250, 300));
+        setPreferredSize(new Dimension(270, 305));
+        setMinimumSize(new Dimension(270, 305));
         activeGames = new JPanel();
         activeGames.setLayout(new BoxLayout(activeGames, BoxLayout.Y_AXIS));
         scrollPane = new JScrollPane(activeGames);
-        scrollPane.setPreferredSize(new Dimension(250, 275));
+        scrollPane.setPreferredSize(new Dimension(270, 295));
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         add(scrollPane);
-
     }
 
     public void removeGames() {
