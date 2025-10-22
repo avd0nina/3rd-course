@@ -40,7 +40,7 @@ public class NewGameWindow implements ActionListener {
         panel.add(scrollPane, constraints);
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        backButton.setBackground(new Color(200, 220, 240));
+        backButton.setBackground(Color.WHITE);
         backButton.setForeground(Color.BLACK);
         backButton.setActionCommand("back");
         backButton.addActionListener(this);
@@ -49,7 +49,7 @@ public class NewGameWindow implements ActionListener {
         panel.add(backButton, constraints);
         JButton startButton = new JButton("Start");
         startButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        startButton.setBackground(new Color(150, 200, 230));
+        startButton.setBackground(Color.WHITE);
         startButton.setForeground(Color.BLACK);
         startButton.setActionCommand("create");
         startButton.addActionListener(this);
