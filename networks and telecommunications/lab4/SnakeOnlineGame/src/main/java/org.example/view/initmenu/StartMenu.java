@@ -36,16 +36,16 @@ public class StartMenu implements ActionListener {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
-        JLabel title = new JLabel("MySnake Online");
+        JLabel title = new JLabel("Snake Online Game");
         title.setFont(new Font("Arial", Font.BOLD, 28));
-        title.setForeground(new Color(50, 100, 150));
+        title.setForeground(new Color(77, 163, 78));
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.gridwidth = 2;
         panel.add(title, constraints);
         JLabel gamesTitle = new JLabel("Available Games");
         gamesTitle.setFont(new Font("Arial", Font.PLAIN, 18));
-        gamesTitle.setForeground(new Color(70, 130, 180));
+        gamesTitle.setForeground(new Color(107, 184, 121));
         constraints.gridy = 1;
         constraints.gridwidth = 2;
         panel.add(gamesTitle, constraints);
@@ -56,7 +56,7 @@ public class StartMenu implements ActionListener {
         panel.add(activeGames, constraints);
         JButton newGameButton = new JButton("New Game");
         newGameButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        newGameButton.setBackground(new Color(200, 220, 240));
+        newGameButton.setBackground(Color.WHITE);
         newGameButton.setForeground(Color.BLACK);
         newGameButton.addActionListener(this);
         newGameButton.setActionCommand("createGame");
@@ -66,13 +66,13 @@ public class StartMenu implements ActionListener {
         panel.add(newGameButton, constraints);
         JButton exitButton = new JButton("Exit");
         exitButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        exitButton.setBackground(new Color(200, 220, 240));
+        exitButton.setBackground(Color.WHITE);
         exitButton.setForeground(Color.BLACK);
         exitButton.addActionListener(this);
         exitButton.setActionCommand("exitGame");
         constraints.gridx = 1;
         panel.add(exitButton, constraints);
-        panel.setBackground(new Color(240, 245, 250));
+        panel.setBackground(new Color(253, 253, 253));
         return panel;
     }
 
