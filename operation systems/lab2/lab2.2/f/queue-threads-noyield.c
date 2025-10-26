@@ -101,11 +101,7 @@ int main() {
     pthread_join(tid[2], NULL);
     running = 0;
     
-    pthread_cond_broadcast(&q->not_empty);
-    pthread_cond_broadcast(&q->not_full);
-    
-    pthread_cancel(tid[0]);
-    pthread_cancel(tid[1]);
+    queue_shutdown(q);
     
     pthread_join(tid[0], NULL);
     pthread_join(tid[1], NULL);
