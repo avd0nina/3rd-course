@@ -21,9 +21,10 @@ typedef struct _Queue {
     pthread_t qmonitor_tid;
     pthread_mutex_t mutex;
     pthread_cond_t not_empty;
-    pthread_cond_t not_full;  
+    pthread_cond_t not_full;
     int count;
     int max_count;
+    int shutdown;  
     // queue statistics
     long add_attempts;
     long get_attempts;
@@ -36,5 +37,6 @@ void queue_destroy(queue_t *q);
 int queue_add(queue_t *q, int val);
 int queue_get(queue_t *q, int *val);
 void queue_print_stats(queue_t *q);
+void queue_shutdown(queue_t *q);
 
 #endif        // __FITOS_QUEUE_H__
