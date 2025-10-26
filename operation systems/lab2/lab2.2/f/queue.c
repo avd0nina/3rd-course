@@ -24,6 +24,7 @@ queue_t* queue_init(int max_count) {
     q->last = NULL;
     q->max_count = max_count;
     q->count = 0;
+    q->shutdown = 0;
     
     err = pthread_mutex_init(&q->mutex, NULL);
     if (err) {
@@ -54,10 +55,22 @@ queue_t* queue_init(int max_count) {
     return q;
 }
 
+void queue_shutdown(queue_t *q) {
+    if (q == NULL) return;
+    
+    pthread_mutex_lock(&q->mutex);
+    q->shutdown = 1;
+    pthread_cond_broadcast(&q->not_empty);
+    pthread_cond_broadcast(&q->not_full);
+    pthread_mutex_unlock(&q->mutex);
+}
+
 void queue_destroy(queue_t *q) {
     if (q == NULL) {
         return;
     }
+    
+    queue_shutdown(q);
     
     pthread_cancel(q->qmonitor_tid);
     pthread_join(q->qmonitor_tid, NULL);
@@ -88,8 +101,13 @@ int queue_add(queue_t *q, int val) {
     
     q->add_attempts++;
     
-    while (q->count == q->max_count) {
+    while (q->count == q->max_count && !q->shutdown) {
         pthread_cond_wait(&q->not_full, &q->mutex);
+    }
+    
+    if (q->shutdown) {
+        pthread_mutex_unlock(&q->mutex);
+        return 0;
     }
     
     assert(q->count <= q->max_count);
@@ -125,8 +143,13 @@ int queue_get(queue_t *q, int *val) {
     
     q->get_attempts++;
     
-    while (q->count == 0) {
+    while (q->count == 0 && !q->shutdown) {
         pthread_cond_wait(&q->not_empty, &q->mutex);
+    }
+    
+    if (q->shutdown && q->count == 0) {
+        pthread_mutex_unlock(&q->mutex);
+        return 0;
     }
     
     assert(q->count >= 0);
@@ -146,8 +169,10 @@ int queue_get(queue_t *q, int *val) {
 }
 
 void queue_print_stats(queue_t *q) {
+    pthread_mutex_lock(&q->mutex);
     printf("queue stats: current size %d; attempts: (%ld %ld %ld); counts (%ld %ld %ld)\n",
         q->count,
         q->add_attempts, q->get_attempts, q->add_attempts - q->get_attempts,
         q->add_count, q->get_count, q->add_count - q->get_count);
+    pthread_mutex_unlock(&q->mutex);
 }
