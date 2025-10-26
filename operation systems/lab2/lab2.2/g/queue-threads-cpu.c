@@ -9,7 +9,7 @@
 #include <sched.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include "queue-sem.h"
+#include "queue.h"
 
 #define RED "\033[41m"
 #define NOCOLOR "\033[0m"
