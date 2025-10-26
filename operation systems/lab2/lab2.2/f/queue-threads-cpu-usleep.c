@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     long total_add_count = q->add_count - start_add_count;
     long total_get_count = q->get_count - start_get_count;
     
-    printf("\n=== RESULTS WITH CONDITION VARIABLES (CPUs: reader=%d, writer=%d) ===\n", reader_cpu, writer_cpu);
+    printf("RESULTS WITH CONDITION VARIABLES (CPUs: reader=%d, writer=%d)\n", reader_cpu, writer_cpu);
     printf("CPU Time: user=%.3fs, system=%.3fs, total=%.3fs\n",
            user_time, system_time, user_time + system_time);
     printf("Operations: add_attempts=%ld, get_attempts=%ld\n",
