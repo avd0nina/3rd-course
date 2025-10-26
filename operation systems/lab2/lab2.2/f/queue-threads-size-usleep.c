@@ -112,6 +112,9 @@ int main(int argc, char *argv[]) {
     pthread_cond_broadcast(&q->not_empty);
     pthread_cond_broadcast(&q->not_full);
     
+    pthread_cancel(tid[0]);
+    pthread_cancel(tid[1]);
+    
     pthread_join(tid[0], NULL);
     pthread_join(tid[1], NULL);
     
