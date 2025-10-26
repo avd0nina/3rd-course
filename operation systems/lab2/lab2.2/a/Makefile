@@ -1,18 +1,18 @@
-TARGET_1 = queue-threads
-SRCS_2 = queue.c queue-threads.c
+TARGET = queue-threads
+SRCS = queue.c queue-threads.c
 
-CC=gcc
-RM=rm
-CFLAGS= -g -Wall
-LIBS=-lpthread
-INCLUDE_DIR="."
+CC = gcc
+RM = rm
+CFLAGS = -g -Wall
+LIBS = -lpthread
+INCLUDE_DIR = .
 
-all: ${TARGET_1}
+all: $(TARGET)
 
-${TARGET_1}: queue.h ${SRCS_1}
-	${CC} ${CFLAGS} -I${INCLUDE_DIR} ${SRCS_1} ${LIBS} -o ${TARGET_1}
+$(TARGET): $(SRCS) queue.h
+	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) $(SRCS) $(LIBS) -o $(TARGET)
 
 clean:
-	${RM} -f *.o ${TARGET_1}
+	$(RM) -f *.o $(TARGET)
 
 .PHONY: all clean
