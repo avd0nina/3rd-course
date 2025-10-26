@@ -2,7 +2,7 @@
 #include <pthread.h>
 #include <assert.h>
 #include <semaphore.h>
-#include "queue-sem.h"
+#include "queue.h"
 
 void *qmonitor(void *arg) {
     queue_t *q = (queue_t *)arg;
