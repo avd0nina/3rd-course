@@ -1,9 +1,9 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak -pthread -g
-LDFLAGS = -fsanitize=address -fsanitize=leak
+LDFLAGS = -fsanitize=address -fsanitize=leak -pthread
 
 TARGET = mutex
-SOURCES = ../queue.c main.c
+SOURCES = queue.c main.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: $(TARGET)
@@ -18,6 +18,6 @@ run: $(TARGET)
 	./$(TARGET) $(CAP)
 
 clean:
-	rm -f $(TARGET) *.o
+	rm -f $(TARGET) *.o $(OBJECTS)
 
 .PHONY: all run clean
