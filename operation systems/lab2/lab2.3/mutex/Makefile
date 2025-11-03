@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -fsanitize=leak -pthread -g
 LDFLAGS = -fsanitize=address -fsanitize=leak
 
-TARGET = lab_mutex
+TARGET = mutex
 SOURCES = ../queue.c main.c
 OBJECTS = $(SOURCES:.c=.o)
 
