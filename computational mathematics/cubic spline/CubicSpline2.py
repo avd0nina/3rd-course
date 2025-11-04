@@ -142,7 +142,6 @@ def main():
     plt.text(0.02, 0.98, f'Число узлов: {n}\nКоэффициенты γ: {np.round(gamma, 4)}',
              transform=plt.gca().transAxes, verticalalignment='top',
              bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
-
     plt.tight_layout()
     plt.show()
 
