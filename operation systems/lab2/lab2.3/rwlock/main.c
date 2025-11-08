@@ -4,7 +4,7 @@
 /**
  * Константы для настройки программы.
  */
-#define STORAGE_CAPACITY 1000          ///< Дефолтная ёмкость списка
+#define STORAGE_CAPACITY 5       ///< Дефолтная ёмкость списка
 #define THREAD_COUNT 6                 ///< Количество рабочих потоков
 #define ASC 0                          ///< Идентификатор потока ASC
 #define DESC 1                         ///< Идентификатор потока DESC
@@ -15,7 +15,7 @@
 
 /** Флаг выполнения потоков (volatile — асинхронное изменение). */
 volatile int running = 1;
-
+int asc_nodes_read = 0, desc_nodes_read = 0, eq_nodes_read = 0;
 /**
  * Поток, считающий пары по возрастанию длин.
  * Проходит по списку, считает пары, где длина текущей строки меньше следующей.
@@ -27,20 +27,22 @@ void *ascending_thread(void *data) {
     Storage *storage = td->storage;
     int *counter = td->counter;
     while (running) {
-        int local_count = 0;  // Локальный счётчик пар
-        // Копируем указатель на голову под мьютексом
+        int local_count = 0;
+        int nodes_read = 0;  // ← Считаем
         pthread_mutex_lock(&storage->head_mutex);
         Node *curr = storage->first;
-        pthread_mutex_unlock(&storage->head_mutex);
         if (curr == NULL) {
-            usleep(1000);
+            pthread_mutex_unlock(&storage->head_mutex);
+            usleep(1);
             continue;
         }
         pthread_rwlock_rdlock(&curr->sync);
+        pthread_mutex_unlock(&storage->head_mutex);
         Node *next = curr->next;
-        // Проход по списку
+        nodes_read = 1;  // первый узел
         while (next != NULL && running) {
             pthread_rwlock_rdlock(&next->sync);
+            nodes_read++;  // ← каждый новый узел
             if (strlen(curr->value) < strlen(next->value)) {
                 local_count++;
             }
@@ -49,12 +51,12 @@ void *ascending_thread(void *data) {
             next = curr->next;
         }
         pthread_rwlock_unlock(&curr->sync);
-        // Обновляем глобальные счётчики
         pthread_mutex_lock(&global_mutex);
         asc_pairs = local_count;
+        asc_nodes_read = nodes_read;  // ← Сохраняем
         (*counter)++;
         pthread_mutex_unlock(&global_mutex);
-        usleep(1000);
+        usleep(1);
     }
     return NULL;
 }
@@ -69,17 +71,21 @@ void *descending_thread(void *data) {
     int *counter = td->counter;
     while (running) {
         int local_count = 0;
+        int nodes_read = 0;
         pthread_mutex_lock(&storage->head_mutex);
         Node *curr = storage->first;
-        pthread_mutex_unlock(&storage->head_mutex);
         if (curr == NULL) {
-            usleep(1000);
+            pthread_mutex_unlock(&storage->head_mutex);
+            usleep(1);
             continue;
         }
         pthread_rwlock_rdlock(&curr->sync);
+        pthread_mutex_unlock(&storage->head_mutex);
         Node *next = curr->next;
+        nodes_read = 1;  // первый узел
         while (next != NULL && running) {
             pthread_rwlock_rdlock(&next->sync);
+            nodes_read++;  // ← каждый новый узел
             if (strlen(curr->value) > strlen(next->value)) {
                 local_count++;
             }
@@ -90,9 +96,10 @@ void *descending_thread(void *data) {
         pthread_rwlock_unlock(&curr->sync);
         pthread_mutex_lock(&global_mutex);
         desc_pairs = local_count;
+        desc_nodes_read = nodes_read;  // ← Сохраняем
         (*counter)++;
         pthread_mutex_unlock(&global_mutex);
-        usleep(1000);
+        usleep(1);
     }
     return NULL;
 }
@@ -107,17 +114,21 @@ void *equal_length_thread(void *data) {
     int *counter = td->counter;
     while (running) {
         int local_count = 0;
+        int nodes_read = 0;
         pthread_mutex_lock(&storage->head_mutex);
         Node *curr = storage->first;
-        pthread_mutex_unlock(&storage->head_mutex);
         if (curr == NULL) {
-            usleep(1000);
+            pthread_mutex_unlock(&storage->head_mutex);
+            usleep(1);
             continue;
         }
         pthread_rwlock_rdlock(&curr->sync);
+        pthread_mutex_unlock(&storage->head_mutex);
         Node *next = curr->next;
+        nodes_read = 1;  // первый узел
         while (next != NULL && running) {
             pthread_rwlock_rdlock(&next->sync);
+            nodes_read++;  // ← каждый новый узел
             if (strlen(curr->value) == strlen(next->value)) {
                 local_count++;
             }
@@ -128,9 +139,10 @@ void *equal_length_thread(void *data) {
         pthread_rwlock_unlock(&curr->sync);
         pthread_mutex_lock(&global_mutex);
         eq_pairs = local_count;
+        eq_nodes_read = nodes_read;  // ← Сохраняем
         (*counter)++;
         pthread_mutex_unlock(&global_mutex);
-        usleep(1000);
+        usleep(1);
     }
     return NULL;
 }
@@ -229,8 +241,9 @@ void *count_monitor(void *arg) {
         printf("Iterations: ASC=%d, DESC=%d, EQ=%d, SWAP1=%d, SWAP2=%d, SWAP3=%d\n",
                counters[ASC], counters[DESC], counters[EQ],
                counters[SWAP1], counters[SWAP2], counters[SWAP3]);
-        printf("Pairs: Ascending=%d, Descending=%d, Equal=%d\n",
-               asc_pairs, desc_pairs, eq_pairs);
+        printf("Pairs: Ascending=%d, Descending=%d, Equal=%d (read %d, %d, %d nodes)\n",
+               asc_pairs, desc_pairs, eq_pairs,
+               asc_nodes_read, desc_nodes_read, eq_nodes_read);
         printf("Swaps total: %d\n",
                swap_counts[0] + swap_counts[1] + swap_counts[2]);
         sleep(2);
