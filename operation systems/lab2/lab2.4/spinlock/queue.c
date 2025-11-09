@@ -1,11 +1,27 @@
 #include "queue.h"
 
+/**
+ * Глобальный мьютекс для защиты счётчиков статистики.
+ * Защищает доступ к переменным asc_pairs, desc_pairs, eq_pairs и swap_counts[3] от одновременного изменения несколькими потоками.
+ */
 pthread_mutex_t global_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/** Счётчик пар по возрастанию длин. */
 int asc_pairs = 0;
+/** Счётчик пар по убыванию длин. */
 int desc_pairs = 0;
+/** Счётчик пар с равной длиной. */
 int eq_pairs = 0;
+/** Счётчики успешных перестановок для трёх swap-потоков. */
 int swap_counts[3] = {0, 0, 0};
 
+
+/**
+ * Создаёт и инициализирует хранилище списка.
+ * Выделяет память под структуру Storage, инициализирует указатель на первый узел, сохраняет ёмкость и инициализирует мьютекс головы.
+ * @param capacity Количество узлов в списке.
+ * @return Указатель на созданное хранилище.
+ */
 Storage* initialize_storage(int capacity) {
     Storage *storage = malloc(sizeof(Storage));
     if (!storage) {
@@ -18,6 +34,13 @@ Storage* initialize_storage(int capacity) {
     return storage;
 }
 
+
+/**
+ * Добавляет новый узел в конец списка.
+ * Выделяет память под узел, копирует строку, инициализирует спинлок узла и вставляет его в конец списка под защитой head_mutex.
+ * @param storage Указатель на хранилище.
+ * @param value Строка для копирования в узел.
+ */
 void add_node(Storage *storage, const char *value) {
     Node *new_node = malloc(sizeof(Node));
     if (!new_node) {
@@ -41,6 +64,12 @@ void add_node(Storage *storage, const char *value) {
     pthread_mutex_unlock(&storage->head_mutex);
 }
 
+/**
+ * Заполняет список capacity узлами.
+ * Создаёт строки с длинами 1..99 и символами 'A'..'Z' по циклу. Использует add_node() для вставки.
+ * @param storage Указатель на хранилище.
+ * @param capacity Количество узлов.
+ */
 void fill_storage(Storage *storage, int capacity) {
     for (int i = 0; i < capacity; ++i) {
         int length = (i % 99) + 1;
@@ -51,6 +80,10 @@ void fill_storage(Storage *storage, int capacity) {
     }
 }
 
+/**
+ * Печатает первые 20 узлов списка. Копирует указатель на первый узел под защитой head_mutex, затем выводит строки с их длинами.
+ * @param storage Указатель на хранилище.
+ */
 void print_storage(Storage *storage) {
     pthread_mutex_lock(&storage->head_mutex);
     Node *current = storage->first;
@@ -68,6 +101,12 @@ void print_storage(Storage *storage) {
     }
 }
 
+/**
+ * Возвращает длину списка с hand-over-hand locking.
+ * Использует head_mutex для получения первого узла, затем передаёт эстафету спинлокам узлов. Безопасно при параллельных swap'ах.
+ * @param storage Указатель на хранилище.
+ * @return Количество узлов в списке.
+ */
 int get_list_length(Storage *storage) {
     int length = 0;
     pthread_mutex_lock(&storage->head_mutex);
@@ -90,6 +129,11 @@ int get_list_length(Storage *storage) {
     return length;
 }
 
+/**
+ * Освобождает всю память, занятую списком.
+ * Проходит по списку, уничтожает спинлоки узлов, освобождает память узлов и хранилища.
+ * @param storage Указатель на хранилище.
+ */
 void free_storage(Storage *storage) {
     Node *current = storage->first;
     while (current != NULL) {
