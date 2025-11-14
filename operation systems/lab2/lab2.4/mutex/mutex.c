@@ -16,7 +16,7 @@
  * @param timeout  Таймаут (NULL — бесконечно)
  * @return Результат системного вызова (0 при успехе, -1 при ошибке)
  */
-static inline int futex(int *uaddr, int op, int val, const struct timespec *timeout) {
+static int futex(int *uaddr, int op, int val, const struct timespec *timeout) {
     return syscall(SYS_futex, uaddr, op, val, timeout, NULL, 0);
 }
 
@@ -32,19 +32,9 @@ void custom_mutex_init(custom_mutex_t *mutex) {
 
 /**
  * Захватывает мьютекс (блокирующая операция).
- * Алгоритм:
- * 1. Быстрый путь: 100 попыток CAS в userspace
- * 2. Медленный путь: futex WAIT при невозможности захватить
+ * futex WAIT при невозможности захватить
  */
 int custom_mutex_lock(custom_mutex_t *mutex) {
-    // Быстрый путь: спин с CAS (100 попыток)
-    for (int i = 0; i < 100; i++) {
-        if (__sync_bool_compare_and_swap(&mutex->lock, 0, 1)) {
-            return 0; // Успешно захватили
-        }
-        __builtin_ia32_pause(); // Снижаем нагрузку на CPU
-    }
-    // Медленный путь: переходим к futex
     // Пока не удастся захватить — усыпляемся в ядре
     while (!__sync_bool_compare_and_swap(&mutex->lock, 0, 1)) {
         // Усыпляем поток только если мьютекс всё ещё занят (lock == 1)
