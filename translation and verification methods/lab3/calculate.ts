@@ -75,7 +75,6 @@ export interface ArithActions {
     calculate(params: {[name:string]:number}): number;
 }
 
-export interface ArithSemantics extends ArithmeticSemantics
-{
+export interface ArithSemantics extends ArithmeticSemantics {
     (match: MatchResult): ArithActions;
 }
