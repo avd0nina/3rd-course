@@ -1,68 +1,67 @@
 import { MatchResult, Node } from 'ohm-js';
 import { arithGrammar, ArithmeticActionDict, ArithmeticSemantics, SyntaxError } from '../../lab03';
-import { Expr } from './ast';
+import { Expr, BinaryOp, UnaryNeg, NumLiteral, Variable } from './ast';
 
 export const getExprAst: ArithmeticActionDict<Expr> = {
-    Expr(e: Node): Expr {
-        return e.parse();
+    Expr(addExpr: Node) {
+        return addExpr.parse();
     },
-
-    Sum(first: Node, operators: Node, rest: Node): Expr {
-        let acc: Expr = first.parse();
-        const n = operators.children.length;
-        for (let i = 0; i < n; i++) {
-            const op = operators.child(i).sourceString as '+' | '-';
-            const rhs: Expr = rest.child(i).parse();
-            acc = { type: 'bin', op, left: acc, right: rhs };
+    
+    AddExpr(first: Node, ops: Node, operands: Node) {
+        let result = first.parse();
+        for (let i = 0; i < ops.numChildren; i++) {
+            const op = ops.child(i).sourceString as '+' | '-';
+            const right = operands.child(i).parse();
+            result = { type: 'binary', op, left: result, right } as BinaryOp;
         }
-        return acc;
+        return result;
     },
-
-    Mul(first: Node, operators: Node, rest: Node): Expr {
-        let acc: Expr = first.parse();
-        const n = operators.children.length;
-        for (let i = 0; i < n; i++) {
-            const op = operators.child(i).sourceString as '*' | '/';
-            const rhs: Expr = rest.child(i).parse();
-            acc = { type: 'bin', op, left: acc, right: rhs };
+    
+    MulExpr(first: Node, ops: Node, operands: Node) {
+        let result = first.parse();
+        for (let i = 0; i < ops.numChildren; i++) {
+            const op = ops.child(i).sourceString as '*' | '/';
+            const right = operands.child(i).parse();
+            result = { type: 'binary', op, left: result, right } as BinaryOp;
         }
-        return acc;
+        return result;
     },
-
-    Unary_neg(_minus: Node, u: Node): Expr {
-        return { type: 'neg', arg: u.parse() };
+    
+    UnaryExpr_neg(_minus: Node, expr: Node) {
+        return { type: 'neg', argument: expr.parse() } as UnaryNeg;
     },
-
-    Primary_num(n: Node): Expr {
-        return { type: 'num', value: parseInt(n.sourceString, 10) };
+    
+    UnaryExpr_pos(primary: Node) {
+        return primary.parse();
     },
-
-    Primary_var(v: Node): Expr {
-        return { type: 'var', name: v.sourceString };
+    
+    PrimaryExpr_paren(_open: Node, expr: Node, _close: Node) {
+        return expr.parse();
     },
-
-    Primary_parens(_open: Node, e: Node, _close: Node): Expr {
-        return e.parse();
+    
+    PrimaryExpr_num(num: Node) {
+        return { type: 'num', value: parseInt(num.sourceString) } as NumLiteral;
     },
-};
+    
+    PrimaryExpr_var(v: Node) {
+        return { type: 'var', name: v.sourceString } as Variable;
+    },
+}
 
 export const semantics = arithGrammar.createSemantics();
-
-semantics.addOperation<Expr>('parse()', getExprAst);
+semantics.addOperation("parse()", getExprAst);
 
 export interface ArithSemanticsExt extends ArithmeticSemantics {
-    (match: MatchResult): ArithActionsExt;
+    (match: MatchResult): ArithActionsExt
 }
 
 export interface ArithActionsExt {
-    parse(): Expr;
+    parse(): Expr
 }
-
 export function parseExpr(source: string): Expr {
-    const match = arithGrammar.match(source, 'Expr');
+    const match = arithGrammar.match(source);
     if (match.failed()) {
-        const msg = (match as any).message ?? 'Syntax error while parsing expression.';
-        throw new SyntaxError(msg);
+        throw new SyntaxError(match.message);
     }
-    return (semantics as ArithSemanticsExt)(match).parse();
+    return (semantics(match) as ArithActionsExt).parse();
 }
