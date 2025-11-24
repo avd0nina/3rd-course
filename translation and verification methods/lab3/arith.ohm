@@ -1,19 +1,18 @@
 Arithmetic {
-    Expr = Sum
-    SumOperator = "+" | "-"
-    Sum = Mul (SumOperator Mul)*
-    MulOperator = "*" | "/"
-    Mul = Unary (MulOperator Unary)*
-    Unary = 
-    "-" Unary  -- neg 
-    | Primary
-    Primary = number        -- num
-        | variable      -- var
-        | "(" Expr ")"  -- parens
-
-    variable = letter alnum*
-    nonZeroDigit = "1".."9"
-    number
-        = "0"                  -- zero
-        | nonZeroDigit digit*  -- nz
+    Expr = AddExpr
+    
+    AddExpr = MulExpr (("+" | "-") MulExpr)*
+    
+    MulExpr = UnaryExpr (("*" | "/") UnaryExpr)*
+    
+    UnaryExpr = "-" UnaryExpr  -- neg
+              | PrimaryExpr    -- pos
+    
+    PrimaryExpr = "(" Expr ")"  -- paren
+                | number        -- num
+                | variable      -- var
+    
+    variable = letter (letter | digit)*
+    
+    number = digit+
 }
