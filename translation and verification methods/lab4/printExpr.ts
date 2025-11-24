@@ -1,69 +1,59 @@
-import { Bin, Expr } from "./ast";
+import { Expr } from "./ast";
 
-function prec(e: Expr): number {
-    switch (e.type) {
-        case 'num':
-        case 'var': return 4;
-        case 'neg': return 3;
-        case 'bin':
-            return (e.op === '+' || e.op === '-') ? 1 : 2;
+type OpPrecedence = number;
+
+const PRECEDENCE = {
+    '+': 1,
+    '-': 1,
+    '*': 2,
+    '/': 2,
+} as const;
+
+function getPrecedence(expr: Expr): OpPrecedence {
+    if (expr.type === 'binary') {
+        return PRECEDENCE[expr.op];
     }
+    return Infinity;
 }
 
-function isBinOp(e: Expr, ops: Array<Bin['op']>): e is Bin {
-    return e.type === 'bin' && ops.includes(e.op);
-}
-
-function needParens(child: Expr, parentOp: Bin['op'], isRightChild: boolean): boolean {
-    const pc = prec(child);
-    const pp = (parentOp === '+' || parentOp === '-') ? 1 : 2;
-
-    if (pc > pp) return false;
-    if (pc < pp) return true;
-
-    if (child.type !== 'bin') return false;
-
-    if (parentOp === '+') {
+function needsParens(expr: Expr, parentOp?: string, isRight?: boolean): boolean {
+    if (expr.type !== 'binary') {
         return false;
     }
-    if (parentOp === '-') {
-        return isRightChild && isBinOp(child, ['+', '-']);
+    if (!parentOp) {
+        return false;
     }
-
-    if (parentOp === '*') {
-        return isRightChild && isBinOp(child, ['/']);
+    const exprPrec = getPrecedence(expr);
+    const parentPrec = PRECEDENCE[parentOp as keyof typeof PRECEDENCE];
+    if (exprPrec < parentPrec) {
+        return true;
     }
-    if (parentOp === '/') {
-        return isRightChild && isBinOp(child, ['*', '/']);
+    if (isRight && exprPrec === parentPrec && (parentOp === '-' || parentOp === '/')) {
+        return true;
     }
     return false;
 }
 
-export function printExpr(e: Expr, parentOp?: Bin['op'], isRightChild: boolean = false): string {
+export function printExpr(e: Expr, parentOp?: string, isRight?: boolean): string
+{
     switch (e.type) {
-        case 'num': return String(e.value);
-        case 'var': return e.name;
-        case 'neg': {
-            const inner = (e.arg.type === 'bin')
-                ? `(${printExpr(e.arg)})`
-                : printExpr(e.arg);
-            return `-${inner}`;
-        }
-        case 'bin': {
-            const L = needParens(e.left, e.op, false)
-                ? `(${printExpr(e.left)})`
-                : printExpr(e.left);
-            const R = needParens(e.right, e.op, true)
-                ? `(${printExpr(e.right)})`
-                : printExpr(e.right);
-
-            const opStr = ` ${e.op} `;
-            const s = `${L}${opStr}${R}`;
-
-            if (parentOp && needParens(e, parentOp, isRightChild)) {
-                return `(${s})`;
+        case 'num':
+            return e.value.toString();
+        
+        case 'var':
+            return e.name;
+        
+        case 'neg':
+            return '-' + printExpr(e.argument);
+        
+        case 'binary': {
+            const left = printExpr(e.left, e.op, false);
+            const right = printExpr(e.right, e.op, true);
+            const result = left + ' ' + e.op + ' ' + right;
+            if (needsParens(e, parentOp, isRight)) {
+                return '(' + result + ')';
             }
-            return s;
+            return result;
         }
     }
 }
