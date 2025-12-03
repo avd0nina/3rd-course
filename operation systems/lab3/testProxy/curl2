@@ -1,0 +1,3 @@
+time curl -x http://localhost:8080 -s http://example.com > /dev/null
+
+time curl -x http://localhost:8080 -s http://example.com > /dev/null
