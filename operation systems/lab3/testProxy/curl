@@ -1,0 +1,1 @@
+curl -x http://localhost:8080 http://xcal1.vodafone.co.uk/1GB.zip -o a.bin
