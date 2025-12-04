@@ -37,8 +37,14 @@
 extern "C" {
 #endif
 
-/* contains name and response of a header (name == NULL if is a continuing line
- * of a multiline header */
+/**
+ * @brief Структура, представляющая HTTP-заголовок
+ * @details Содержит имя и значение заголовка.
+ * @var name       Указатель на начало имени заголовка
+ * @var name_len   Длина имени заголовка в байтах
+ * @var value      Указатель на начало значения заголовка
+ * @var value_len  Длина значения заголовка в байтах
+ */
 struct phr_header {
     const char *name;
     size_t name_len;
@@ -46,19 +52,65 @@ struct phr_header {
     size_t value_len;
 };
 
-/* returns number of bytes consumed if successful, -2 if request is partial,
- * -1 if failed */
+/**
+ * @brief Разбирает HTTP-запрос из буфера
+ * @param buf           Буфер с HTTP-запросом
+ * @param len           Длина данных в буфере
+ * @param method        Возвращаемый указатель на метод запроса (GET, POST и т.д.)
+ * @param method_len    Возвращаемая длина метода
+ * @param path          Возвращаемый указатель на путь запроса
+ * @param path_len      Возвращаемая длина пути
+ * @param minor_version Возвращаемая минорная версия HTTP (0 для HTTP/1.0, 1 для HTTP/1.1)
+ * @param headers       Массив для заполнения заголовков
+ * @param num_headers   Вход: емкость массива headers; Выход: количество найденных заголовков
+ * @param last_len      Длина предыдущего частичного запроса (0 при первом вызове)
+ * @return >0  - количество обработанных байт
+ *         -1  - ошибка разбора
+ *         -2  - неполный запрос (нужно больше данных)
+ */
 int phr_parse_request(const char *buf, size_t len, const char **method, size_t *method_len, const char **path, size_t *path_len,
                       int *minor_version, struct phr_header *headers, size_t *num_headers, size_t last_len);
 
-/* ditto */
+/**
+ * @brief Разбирает HTTP-ответ из буфера
+ * @param _buf          Буфер с HTTP-ответом (не нуль-терминированный)
+ * @param len           Длина данных в буфере
+ * @param minor_version Возвращаемая минорная версия HTTP
+ * @param status        Возвращаемый статус ответа (200, 404, 500 и т.д.)
+ * @param msg           Возвращаемый указатель на сообщение статуса ("OK", "Not Found")
+ * @param msg_len       Возвращаемая длина сообщения статуса
+ * @param headers       Массив для заполнения заголовков
+ * @param num_headers   Вход: емкость массива headers; Выход: количество найденных заголовков
+ * @param last_len      Длина предыдущего частичного ответа (0 при первом вызове)
+ * @return >0  - количество обработанных байт
+ *         -1  - ошибка разбора
+ *         -2  - неполный ответ (нужно больше данных)
+ */
 int phr_parse_response(const char *_buf, size_t len, int *minor_version, int *status, const char **msg, size_t *msg_len,
                        struct phr_header *headers, size_t *num_headers, size_t last_len);
 
-/* ditto */
+/**
+ * @brief Разбирает только заголовки HTTP из буфера
+ * @param buf           Буфер с HTTP-заголовками (после первой строки)
+ * @param len           Длина данных в буфере
+ * @param headers       Массив для заполнения заголовков
+ * @param num_headers   Вход: емкость массива headers; Выход: количество найденных заголовков
+ * @param last_len      Длина предыдущих частичных заголовков (0 при первом вызове)
+ * @return >0  - количество обработанных байт
+ *         -1  - ошибка разбора
+ *         -2  - неполные заголовки (нужно больше данных)
+ */
 int phr_parse_headers(const char *buf, size_t len, struct phr_header *headers, size_t *num_headers, size_t last_len);
 
-/* should be zero-filled before start */
+/**
+ * @brief Декодер для chunked transfer encoding
+ * @details Структура должна быть обнулена перед использованием.
+ *          Используется для декодирования данных в формате Transfer-Encoding: chunked.
+ * @var bytes_left_in_chunk  Количество байт, оставшихся в текущем чанке
+ * @var consume_trailer      Флаг: следует ли потреблять трейлеры (заголовки после чанков)
+ * @var _hex_count           Внутренний счетчик для парсинга шестнадцатеричных чисел
+ * @var _state               Внутреннее состояние декодера
+ */
 struct phr_chunked_decoder {
     size_t bytes_left_in_chunk; /* number of bytes left in current chunk */
     char consume_trailer;       /* if trailing headers should be consumed */
@@ -66,18 +118,26 @@ struct phr_chunked_decoder {
     char _state;
 };
 
-/* the routine rewrites the buffer given as (buf, bufsz) removing the chunked-
- * encoding headers.  When the routine returns without an error, bufsz is
- * updated to the length of the decoded data available.  Applications should
- * repeatedly call the routine while it returns -2 (incomplete) every time
- * supplying newly arrived data.  If the end of the chunked-encoded data is
- * found, the routine returns a non-negative number indicating the number of
- * octets left undecoded, that starts from the offset returned by `*bufsz`.
- * Returns -1 on error.
+/**
+ * @brief Декодирует данные в формате chunked transfer encoding
+ * @details Перезаписывает буфер, удаляя chunked-заголовки. При успешном выполнении
+ *          *bufsz обновляется до длины декодированных данных.
+ * @param decoder  Указатель на инициализированный декодер (должен быть обнулен)
+ * @param buf      Буфер с chunked-данными (будет модифицирован)
+ * @param bufsz    Вход: размер буфера; Выход: размер декодированных данных
+ * @return >=0 - количество необработанных байт после декодирования
+ *         -1  - ошибка декодирования
+ *         -2  - неполные данные (нужно больше данных для продолжения)
+ * @note Приложения должны повторно вызывать функцию, пока она возвращает -2,
+ *       каждый раз предоставляя новые данные.
  */
 ssize_t phr_decode_chunked(struct phr_chunked_decoder *decoder, char *buf, size_t *bufsz);
 
-/* returns if the chunked decoder is in middle of chunked data */
+/**
+ * @brief Проверяет, находится ли декодер в середине обработки данных чанка
+ * @param decoder Указатель на декодер
+ * @return 1 если декодер в середине данных чанка, 0 в противном случае
+ */
 int phr_decode_chunked_is_in_data(struct phr_chunked_decoder *decoder);
 
 #ifdef __cplusplus
