@@ -1,0 +1,21 @@
+Arithmetic {
+    Expr = AddExpr
+    
+    AddExpr = MulExpr (("+" | "-") MulExpr)*
+    
+    MulExpr = UnaryExpr (("*" | "/") UnaryExpr)*
+    
+    UnaryExpr = "-" UnaryExpr  -- neg
+              | PrimaryExpr    -- pos
+    
+    PrimaryExpr = "(" Expr ")"  -- paren
+                | floatNumber   -- float
+                | number        -- num
+                | variable      -- var
+    
+    variable = letter (letter | digit)*
+    
+    floatNumber = digit+ "." digit+
+    
+    number = digit+
+}
