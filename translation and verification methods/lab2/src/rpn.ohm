@@ -1,0 +1,11 @@
+ReversePolishNotation {
+    Rpn = Expr
+    
+    Expr = Expr Expr plus  -- add
+         | Expr Expr times -- multiply
+         | number          -- number
+    
+    number = space* digit+ space*
+    plus = space* "+"
+    times = space* "*"
+}
