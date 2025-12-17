@@ -1,43 +1,35 @@
-import { Dict, MatchResult, Semantics, Node, IterationNode } from "ohm-js";
+import { Dict, MatchResult, Semantics } from "ohm-js";
 import grammar, { AddMulActionDict } from "./addmul.ohm-bundle";
 
 export const addMulSemantics: AddMulSemantics = grammar.createSemantics() as AddMulSemantics;
 
 const addMulCalc = {
-  Expr(e: Node) {
+  Expr_plus(e, _op, t) {
+    return e.calculate() + t.calculate();
+  },
+  Expr_minus(e, _op, t) {
+    return e.calculate() - t.calculate();
+  },
+  Term_times(t, _op, f) {
+    return t.calculate() * f.calculate();
+  },
+  Term_divide(t, _op, f) {
+    return t.calculate() / f.calculate();
+  },
+  Factor_parens(_l, e, _r) {
     return e.calculate();
   },
-  Add(left: Node, ops: IterationNode, rights: IterationNode) {
-    let result = left.calculate();
-    for (let i = 0; i < ops.numChildren; i++) {
-      result += rights.child(i).calculate();
-    }
-    return result;
-  },
-  Mul(left: Node, ops: IterationNode, rights: IterationNode) {
-    let result = left.calculate();
-    for (let i = 0; i < ops.numChildren; i++) {
-      result *= rights.child(i).calculate();
-    }
-    return result;
-  },
-  Primary(n: Node) {
-    return n.calculate();
-  },
-  Paren(_l: Node, expr: Node, _r: Node) {
-    return expr.calculate();
-  },
-  number(digits: Node) {
-    return parseInt(digits.sourceString, 10);
+  number(_digits) {
+    return parseInt(this.sourceString, 10);
   }
 } satisfies AddMulActionDict<number>;
 
-addMulSemantics.addOperation<Number>("calculate()", addMulCalc);
+addMulSemantics.addOperation<number>("calculate()", addMulCalc);
 
 interface AddMulDict extends Dict {
-    calculate(): number;
+  calculate(): number;
 }
 
 interface AddMulSemantics extends Semantics {
-    (match: MatchResult): AddMulDict;
+  (match: MatchResult): AddMulDict;
 }
