@@ -1,0 +1,5 @@
+fortyTwo() 
+    returns c: int // always returns 42
+{
+    c = 42;
+}
