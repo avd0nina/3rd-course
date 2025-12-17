@@ -1,0 +1,22 @@
+sqrt(z: int) 
+    requires z >= 1
+    returns x: int
+    ensures square(x) <= z and square(x+1) > z
+    uses y: int
+{
+    x = 1;
+    y = 1;
+    while(y <= z) invariant(y==x*x and square(x-1) <= z)
+    {
+        y = y + 2*x + 1;
+        x = x + 1;
+    }
+    x = x - 1;
+}
+
+square(x: int) 
+    returns y: int 
+    ensures y == x * x
+{
+    y = x * x;
+}

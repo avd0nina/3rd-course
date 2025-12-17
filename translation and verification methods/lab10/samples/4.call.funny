@@ -1,0 +1,21 @@
+foo1() returns x: int
+    ensures x == 42
+{
+    x = 42;
+}
+
+foo2(x: int) returns y: int
+    ensures y == x + 1
+{
+    y = x + 1;
+}
+
+bar(a: int) 
+    returns c: int 
+    ensures c == a * 43
+    uses d: int, e: int
+{
+    d = foo1();
+    e = foo2(d);
+    c = a * e;
+}

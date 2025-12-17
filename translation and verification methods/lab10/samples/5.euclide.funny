@@ -1,0 +1,15 @@
+gcd(x: int, y: int)
+requires x != 0 and y != 0
+returns r: int
+ensures exists(xq: int | xq*r==x) and exists(yq: int | yq*r == y)
+uses a: int, b: int
+{
+    a = x;
+    b = y;
+    while (a != b) invariant(true)        
+        if(a > b)
+            a = a - b;
+        else
+            b = b - a;
+    r = a;  
+}

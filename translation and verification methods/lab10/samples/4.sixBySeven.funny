@@ -1,0 +1,5 @@
+expression() returns x: int
+ensures x == 42
+{
+    x = 6*7;
+}

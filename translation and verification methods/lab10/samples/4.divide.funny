@@ -1,0 +1,13 @@
+divide(a: int, b: int) 
+    requires b > 0 and a >= 0
+    returns q: int, r:int
+    ensures a == q*b + r and 0 <= r and r < b
+{
+    q = 0;
+    r = a;
+    while(r >= b) invariant(a == q*b + r and r>=0)
+    {
+        q = q + 1;
+        r = r - b;
+    }
+}

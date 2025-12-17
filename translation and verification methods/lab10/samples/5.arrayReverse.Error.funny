@@ -1,0 +1,12 @@
+rev(a: int[], b: int[], n: int)
+  requires n>=0 and n < length(a) and length(b) == length(a)
+  returns void
+  ensures forall(k: int | (k>=0 and k<length(a)) -> (b[k] == a[length(a)-k]))
+{
+    if(n == 0)
+        b[0] = a[0];
+    else
+    {
+        rev(a, )
+    }
+}

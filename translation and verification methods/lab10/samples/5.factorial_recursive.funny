@@ -1,0 +1,10 @@
+factorial(n: int) 
+requires n >= 0
+returns f: int
+ensures (n == 0 and f == 1) or (f == n * factorial(n-1))
+{
+    if (n == 0)
+        f = 1;
+    else
+        f = n*factorial(n-1);
+}
