@@ -1,0 +1,4 @@
+forty Two() returns c: int
+{
+    c = 42;
+}
