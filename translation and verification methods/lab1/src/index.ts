@@ -3,19 +3,19 @@ import { addMulSemantics } from "./calculate";
 import grammar from "./addmul.ohm-bundle";
 
 export function evaluate(content: string): number {
-  return calculate(parse(content));
+    return calculate(parse(content));
 }
 
 export class SyntaxError extends Error {}
 
 function parse(content: string): MatchResult {
-  const match = grammar.match(content);
-  if (!match.succeeded()) {
-    throw new SyntaxError(match.message);
-  }
-  return match;
+    const match = grammar.match(content);
+    if (match.failed()) {
+        throw new SyntaxError("Invalid expression: " + content);
+    }
+    return match;
 }
 
 function calculate(expression: MatchResult): number {
-  return addMulSemantics(expression).calculate();
+    return addMulSemantics(expression).calculate();
 }
