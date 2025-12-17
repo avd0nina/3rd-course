@@ -1,0 +1,9 @@
+foo(a: int, b: int) 
+    returns z: int
+    uses c: int, d: int
+{
+    c = a+b;
+    d = a-b;
+    z = c*d;
+    z = q/2;
+}
