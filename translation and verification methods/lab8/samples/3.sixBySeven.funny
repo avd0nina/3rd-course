@@ -1,0 +1,4 @@
+sixBySeven() returns x: int
+{
+    x = 6*7;
+}
