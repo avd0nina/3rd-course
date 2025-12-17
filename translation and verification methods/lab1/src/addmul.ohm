@@ -1,9 +1,15 @@
 AddMul {
-  Expr = Add
-  Add = Mul ("+" Mul)*
-  Mul = Primary ("*" Primary)*
-  Primary = number | Paren
-  Paren = "(" Expr ")"
+  Expr = Expr "+" Term    --plus
+       | Expr "-" Term    --minus
+       | Term
+
+  Term = Term "*" Factor  --times
+       | Term "/" Factor  --divide
+       | Factor
+
+  Factor = "(" Expr ")"   --parens
+         | number
+
   number = digit+
-  space := " " | "\t" | "\n" | "\r"
 }
+
