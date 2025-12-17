@@ -1,0 +1,17 @@
+foo1() returns x: int
+{
+    x = 42;
+}
+
+foo2(x: int) returns y: int
+{
+    y = x + 1;
+}
+
+bar(a: int) 
+    returns c: int 
+    uses e: int
+{
+    e = foo2(foo1());
+    c = a * e;
+}

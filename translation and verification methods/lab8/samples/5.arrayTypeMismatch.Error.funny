@@ -1,0 +1,12 @@
+getArray() returns arr: int[]
+{
+    arr[0] = 10;
+    arr[1] = 20;
+}
+
+main() returns result: int
+    uses x: int
+{
+    x = getArray();
+    result = x;
+}

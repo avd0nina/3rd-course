@@ -1,0 +1,14 @@
+sqrt(n: int) 
+    returns r: int
+{
+    r = 0;
+    while(r * r < n)
+        r = r + 1;
+}
+
+square(x: int) 
+    returns y: int 
+//    having y = x * x
+{
+    y = x * x;
+}

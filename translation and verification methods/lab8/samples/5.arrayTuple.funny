@@ -1,0 +1,16 @@
+processArrays(a: int[], b: int[]) 
+    returns c: int[], d: int[]
+{
+    c = a;
+    d = b;
+}
+
+main(x: int[], y: int[]) 
+    returns result: int, arr1: int[], arr2: int[]
+    uses temp: int
+
+{
+    arr1, arr2 = processArrays(x, y);
+    temp = arr1[0] + arr2[1];
+    result = temp;
+}

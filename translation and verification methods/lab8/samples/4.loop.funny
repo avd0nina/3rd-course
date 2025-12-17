@@ -1,0 +1,12 @@
+multiply(x: int)
+    returns z:int
+    uses i: int
+{
+    i = 0;
+    z = 0;
+    while(i < 10)
+    {
+        z = z + x;
+        i = i + 1;
+    }
+}

@@ -1,0 +1,7 @@
+factorial(n: int) returns f: int
+{
+    if (n == 0)
+        f = 1;
+    else
+        f = n*factorial(n-1);
+}

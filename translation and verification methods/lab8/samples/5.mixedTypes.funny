@@ -1,0 +1,11 @@
+processData(arr: int[], value: int, b:int) 
+    returns result: int, output: int[]
+{
+    result = value;
+    output = arr;
+}
+
+main(a: int[], b: int, h: int) returns x: int, y: int[]
+{
+    x, y = processData(a, b, h);
+}

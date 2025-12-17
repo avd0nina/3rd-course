@@ -1,0 +1,6 @@
+swap(x: int, y: int)
+  returns a: int, b: int
+{
+    a = y;
+    b = x;
+}

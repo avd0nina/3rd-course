@@ -1,0 +1,13 @@
+gcd(x: int, y: int)
+  returns r: int
+  uses a: int, b: int
+{
+    a = x;
+    b = y;
+    while (a != b)
+        if(a > b)
+            a = a - b;
+        else
+            b = b - a;
+    r = a;  
+}
