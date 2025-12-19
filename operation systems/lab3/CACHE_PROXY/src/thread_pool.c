@@ -94,7 +94,7 @@ thread_pool_t * thread_pool_create(int executor_count, int task_queue_capacity) 
     pool->size = 0;
     pool->front = 0;
     pool->rear = 0;
-    pool->shutdown = 0;
+    atomic_store(&pool->shutdown, 0);
     pool->num_executors = executor_count;
     pthread_mutex_init(&pool->mutex, NULL);
     pthread_cond_init(&pool->not_empty_cond, NULL);
@@ -110,12 +110,9 @@ thread_pool_t * thread_pool_create(int executor_count, int task_queue_capacity) 
         free(pool);
         return NULL;
     }
-    char thread_name[16];
     // Создание потоков-исполнителей
     for (int i = 0; i < executor_count; i++) {
         pthread_create(&pool->executors[i], NULL, executor_routine, pool);
-        snprintf(thread_name, 16, "thread-pool-%d", i);
-        pthread_setname_np(thread_name);
     }
     return pool;
 }
@@ -134,13 +131,13 @@ thread_pool_t * thread_pool_create(int executor_count, int task_queue_capacity) 
  *          6. Освобождает мьютекс
  */
 void thread_pool_execute(thread_pool_t *pool, routine_t routine, void *arg) {
-    if (pool->shutdown) {
+    if (atomic_load(&pool->shutdown)) {
         proxy_log("Thread pool execution error: thread pool was shutdown");
         return;
     }
     pthread_mutex_lock(&pool->mutex); // Захват мьютекса для синхронизации
-    while (pool->size == pool->capacity && !pool->shutdown) pthread_cond_wait(&pool->not_full_cond, &pool->mutex); // Проверяет, заполнена ли очередь, и если да - ждет сигнала
-    if (pool->shutdown) {
+    while (pool->size == pool->capacity && !atomic_load(&pool->shutdown)) pthread_cond_wait(&pool->not_full_cond, &pool->mutex); // Проверяет, заполнена ли очередь, и если да - ждет сигнала
+    if (atomic_load(&pool->shutdown)) {
         pthread_mutex_unlock(&pool->mutex);
         return;
     }
@@ -167,7 +164,7 @@ void thread_pool_execute(thread_pool_t *pool, routine_t routine, void *arg) {
  *          6. Освобождает память структуры пула
  */
 void thread_pool_shutdown(thread_pool_t *pool) {
-    pool->shutdown = 1;
+    atomic_store(&pool->shutdown, 1);
     // Пробуждение всех ожидающих потоков
     pthread_cond_broadcast(&pool->not_empty_cond);
     pthread_cond_broadcast(&pool->not_full_cond);
@@ -197,12 +194,16 @@ void thread_pool_shutdown(thread_pool_t *pool) {
  */
 static void *executor_routine(void *arg) {
     thread_pool_t *pool = (thread_pool_t *) arg;
+    char thread_name[16];
+    snprintf(thread_name, 16, "thread-pool");
+    pthread_setname_np(thread_name);
     // Запускает цикл потока-исполнителя
     while (1) {
         pthread_mutex_lock(&pool->mutex);
-        // Ожидание появления задач в очереди
-        while (pool->size == 0 && !pool->shutdown) pthread_cond_wait(&pool->not_empty_cond, &pool->mutex);
-        if (pool->shutdown) {
+        // Ждём либо задачу, либо сигнал shutdown
+        while (pool->size == 0 && !atomic_load(&pool->shutdown)) pthread_cond_wait(&pool->not_empty_cond, &pool->mutex);
+        // Завершение при shutdown и пустой очереди
+        if (atomic_load(&pool->shutdown) && pool->size == 0) {
             pthread_mutex_unlock(&pool->mutex);
             pthread_exit(NULL);
         }
