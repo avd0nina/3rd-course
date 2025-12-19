@@ -170,7 +170,7 @@ static void cache_node_destroy(cache_node_t *node) {
  * @param node Узел для удаления из списка
  */
 static void _lru_remove(cache_node_t *node) {
-    if (node == NULL) return;
+    if (node == NULL || node->lru_prev == NULL || node->lru_next == NULL) return;
     node->lru_prev->lru_next = node->lru_next;
     node->lru_next->lru_prev = node->lru_prev;
     node->lru_prev = NULL;
@@ -269,11 +269,12 @@ cache_entry_t *cache_get(cache_t *cache, const char *request, size_t request_len
     cache_node_t *curr = cache->array[index];
     while (curr != NULL) {
         pthread_rwlock_rdlock(&curr->rwlock);
-        if (curr->entry->request_len == request_len && strncmp(curr->entry->request, request, request_len) == 0 && !curr->entry->deleted) {
+        if (curr->entry->request_len == request_len && strncmp(curr->entry->request, request, request_len) == 0 && !atomic_load(&curr->entry->deleted)) {
             gettimeofday(&curr->last_modified_time, 0);
             // Обновляем LRU: перемещаем в голову
             move_to_head(cache, curr);
             cache_entry_t *entry = curr->entry;
+            atomic_fetch_add(&entry->ref_count, 1); // Увеличиваем счётчик ссылок
             pthread_rwlock_unlock(&curr->rwlock);
             return entry;
         }
@@ -340,9 +341,15 @@ int cache_delete(cache_t *cache, const char *request, size_t request_len) {
                 prev->next = curr->next;
             }
             pthread_rwlock_unlock(&curr->rwlock);
-            curr->entry->deleted = 1;
+            atomic_store(&curr->entry->deleted, 1);
             pthread_cond_broadcast(&curr->entry->ready_cond);
-            cache_node_destroy(curr);
+            // Если ref_count == 0, это значит никто не использует entry → уничтожаем
+            // Если ref_count > 0, то entry будет уничтожена когда последний пользователь вызовет cache_entry_release()
+            if (atomic_load(&curr->entry->ref_count) == 0) {
+                cache_entry_destroy(curr->entry);
+            }
+            pthread_rwlock_destroy(&curr->rwlock);
+            free(curr);
             return SUCCESS;
         }
         pthread_rwlock_unlock(&curr->rwlock);
