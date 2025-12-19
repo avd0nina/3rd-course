@@ -19,7 +19,8 @@ void proxy_log(const char *format, ...) {
     struct timeval tv; // Объявление структуры для времени с микросекундной точностью
     gettimeofday(&tv, NULL); // Получение текущего времени с микросекундной точностью
     time_t stamp_time = time(NULL); // Получение текущего времени в секундах
-    struct tm *tm = localtime(&stamp_time); // Преобразование времени в локальное (с учетом часового пояса)
+    struct tm tm_buf;
+    struct tm *tm = localtime_r(&stamp_time, &tm_buf); // Преобразование времени в локальное (с учетом часового пояса)
     char text[MAX_LOG_MESSAGE_LENGTH + 1];
     va_list args;
     va_start(args, format); // Работа с переменными аргументами
