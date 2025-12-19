@@ -5,14 +5,14 @@
 
 /**
  * @brief Получает количество обработчиков клиентов из переменных окружения
- * @details Читает значение из переменной окружения CLIENT_HANDLER_COUNT
+ * @details Читает значение из переменной окружения CACHE_PROXY_THREAD_POOL_SIZE
  * @return Количество обработчиков клиентов (по умолчанию 10)
  */
 int env_get_client_handler_count();
 
 /**
  * @brief Получает время жизни кэша из переменных окружения
- * @details Читает значение из переменной окружения CACHE_EXPIRED_TIME_MS
+ * @details Читает значение из переменной окружения CACHE_PROXY_CACHE_EXPIRED_TIME_MS
  * @return Время жизни элемента кэша в миллисекундах (по умолчанию 60000)
  */
 time_t env_get_cache_expired_time_ms();
