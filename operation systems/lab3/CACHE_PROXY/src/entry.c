@@ -2,6 +2,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <stdatomic.h>
 #include <string.h>
 
 #include "log.h"
@@ -31,8 +32,9 @@ cache_entry_t *cache_entry_create(const char *request, size_t request_len, const
     entry->response = (message_t *) response;
     pthread_mutex_init(&entry->mutex, NULL); // Инициализация мьютекса
     pthread_cond_init(&entry->ready_cond, NULL); // Инициализирует условную переменную для уведомления потоков
-    entry->deleted = 0;
-    entry->finished = 0;
+    atomic_store(&entry->deleted, 0);
+    atomic_store(&entry->finished, 0);
+    atomic_store(&entry->ref_count, 0); // Начинаем с 0, счётчик увеличивается при каждом cache_get()
     return entry;
 }
 
@@ -55,4 +57,16 @@ void cache_entry_destroy(cache_entry_t *entry) {
     pthread_mutex_destroy(&entry->mutex);
     pthread_cond_destroy(&entry->ready_cond);
     free(entry);
+}
+
+/**
+ * @brief Уменьшает счётчик ссылок и уничтожает entry если ref_count станет 0
+ * @param entry Элемент кэша для уменьшения ссылки
+ * @details Должна вызваться каждый раз, когда поток прекращает использование entry
+ */
+void cache_entry_release(cache_entry_t *entry) {
+    if (entry == NULL) return;
+    if (atomic_fetch_sub(&entry->ref_count, 1) == 1) {
+        cache_entry_destroy(entry);
+    }
 }
