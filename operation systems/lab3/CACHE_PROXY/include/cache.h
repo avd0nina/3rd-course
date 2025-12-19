@@ -21,6 +21,7 @@ struct cache_entry_t {
     pthread_mutex_t mutex; // мьютекс
     pthread_cond_t ready_cond; // условная переменная
     atomic_int deleted; // атомарный флаг, указывающий, что элемент удален из кэша
+    atomic_int ref_count; // счётчик ссылок для безопасного использования после удаления из кэша
 };
 typedef struct cache_entry_t cache_entry_t;
 
@@ -38,6 +39,13 @@ cache_entry_t *cache_entry_create(const char *request, size_t request_len, const
  * @param entry Элемент для удаления
  */
 void cache_entry_destroy(cache_entry_t *entry);
+
+/**
+ * @brief Уменьшает счётчик ссылок и уничтожает entry если больше нет ссылок
+ * @param entry Элемент кэша для уменьшения ссылки
+ * @details Должна вызваться каждый раз, когда поток прекращает использование entry
+ */
+void cache_entry_release(cache_entry_t *entry);
 
 /**
  * @brief Структура, представляющая кэш в целом
