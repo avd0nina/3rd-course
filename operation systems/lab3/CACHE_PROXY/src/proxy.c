@@ -1019,6 +1019,8 @@ static int parse_request(const char *request, size_t request_len, const char **m
     struct phr_header headers[100]; // Массив заголовков
     size_t path_len, num_headers = 100; // Длина пути и количество заголовков
     int minor_version; // Минорная версия HTTP
+    *host = NULL;
+    *host_len = 0;
     // Разбирает HTTP-запрос и заполняет выходные параметры
     int pret = phr_parse_request(request, request_len, method, method_len, (const char **) &path,
                                  &path_len, &minor_version, headers, &num_headers, 0);
@@ -1030,14 +1032,14 @@ static int parse_request(const char *request, size_t request_len, const char **m
         proxy_log("Request parsing error: failed");
         return ERROR;
     }
-    for (int i = 0; i < 100; ++i) { // Ищет заголовок Host в массиве заголовков и сохраняет его значение
+    for (size_t i = 0; i < num_headers; ++i) { // Ищет заголовок Host в массиве заголовков и сохраняет его значение
         if (strncmp(headers[i].name, "Host", 4) == 0) {
             *host = headers[i].value;
             *host_len = headers[i].value_len;
             break;
         }
     }
-    if (host == NULL) {
+    if (*host == NULL) {
         proxy_log("Request parsing error: host header not found");
         return ERROR;
     }
