@@ -1,0 +1,165 @@
+DROP TABLE IF EXISTS AuditLog CASCADE;
+
+CREATE TABLE IF NOT EXISTS MedicalInstitutions (
+    InstitutionID INT PRIMARY KEY,
+    Name VARCHAR(200) NOT NULL UNIQUE,
+    Address VARCHAR(300) NOT NULL,
+    Type VARCHAR(50) NOT NULL CHECK (Type IN ('Hospital', 'Polyclinic', 'Laboratory'))
+);
+
+CREATE TABLE IF NOT EXISTS Hospitals (
+    HospitalID INT PRIMARY KEY REFERENCES MedicalInstitutions (InstitutionID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Buildings (
+    BuildingID INT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Address VARCHAR(300) NOT NULL,
+    HospitalID INT NOT NULL REFERENCES Hospitals (HospitalID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Departments (
+    DepartmentID INT PRIMARY KEY,
+    Name VARCHAR(150) NOT NULL,
+    Specialization VARCHAR(200) NOT NULL,
+    HospitalID INT NOT NULL REFERENCES Hospitals (HospitalID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Wards (
+    WardID INT PRIMARY KEY,
+    Number INT NOT NULL,
+    DepartmentID INT NOT NULL REFERENCES Departments (DepartmentID) ON DELETE CASCADE ON UPDATE CASCADE,
+    BuildingID INT NOT NULL REFERENCES Buildings (BuildingID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Beds (
+    BedID INT PRIMARY KEY,
+    Number INT NOT NULL,
+    Status VARCHAR(50) NOT NULL CHECK (Status IN ('occupied', 'free', 'repair')),
+    WardID INT NOT NULL REFERENCES Wards (WardID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Polyclinics (
+    PolyclinicID INT PRIMARY KEY REFERENCES MedicalInstitutions (InstitutionID) ON DELETE CASCADE ON UPDATE CASCADE,
+    HospitalID INT REFERENCES Hospitals (HospitalID) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Offices (
+    OfficeID INT PRIMARY KEY,
+    Number INT NOT NULL,
+    PolyclinicID INT NOT NULL REFERENCES Polyclinics (PolyclinicID) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Laboratories (
+    LaboratoryID INT PRIMARY KEY REFERENCES MedicalInstitutions (InstitutionID) ON DELETE CASCADE ON UPDATE CASCADE,
+    Profiles VARCHAR(500) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS LaboratoryContracts (
+    ContractID INT PRIMARY KEY,
+    ContractNumber VARCHAR(50) NOT NULL UNIQUE,
+    LaboratoryID INT NOT NULL REFERENCES Laboratories (LaboratoryID) ON DELETE CASCADE ON UPDATE CASCADE,
+    InstitutionID INT NOT NULL REFERENCES MedicalInstitutions (InstitutionID) ON DELETE CASCADE ON UPDATE CASCADE,
+    StartDate DATE NOT NULL,
+    EndDate DATE CHECK (EndDate >= StartDate OR EndDate IS NULL)
+);
+
+CREATE TABLE IF NOT EXISTS Employees (
+    EmployeeID INT PRIMARY KEY,
+    FullName VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Specialties (
+    SpecialtyID INT PRIMARY KEY,
+    Name VARCHAR(150) NOT NULL UNIQUE,
+    VacationDays INT NOT NULL CHECK (VacationDays >= 28),
+    BaseSalary INT NOT NULL,
+    HazardCoefficient FLOAT DEFAULT 1.0
+);
+
+CREATE TABLE IF NOT EXISTS SupportStaff (
+    StaffID INT PRIMARY KEY REFERENCES Employees (EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    Specialty VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Doctors (
+    DoctorID INT PRIMARY KEY REFERENCES Employees (EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    SpecialtyID INT NOT NULL REFERENCES Specialties (SpecialtyID) ON DELETE CASCADE ON UPDATE CASCADE,
+    Degree VARCHAR(100) CHECK (Degree IS NULL OR Degree IN ('кандидат', 'доктор')),
+    Title VARCHAR(100) CHECK (Title IS NULL OR Title IN ('доцент', 'профессор'))
+);
+
+CREATE TABLE IF NOT EXISTS Employment (
+    EmploymentID INT PRIMARY KEY,
+    EmployeeID INT NOT NULL REFERENCES Employees (EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    InstitutionID INT NOT NULL REFERENCES MedicalInstitutions (InstitutionID) ON DELETE CASCADE ON UPDATE CASCADE,
+    EmploymentType VARCHAR(50) NOT NULL CHECK (EmploymentType IN ('main', 'part-time', 'consultation')),
+    StartDate DATE NOT NULL,
+    EndDate DATE CHECK (EndDate >= StartDate OR EndDate IS NULL),
+    ExperienceAtHiring INT NOT NULL CHECK (ExperienceAtHiring >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS OperationTypes (
+    TypeID INT PRIMARY KEY,
+    Name VARCHAR(200) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Certificates (
+    CertificateID INT PRIMARY KEY,
+    DoctorID INT NOT NULL REFERENCES Doctors (DoctorID) ON DELETE CASCADE ON UPDATE CASCADE,
+    TypeID INT NOT NULL REFERENCES OperationTypes (TypeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    IssueDate DATE NOT NULL,
+    QualificationLevel VARCHAR(50) NOT NULL,
+    ExpiryDate DATE CHECK (ExpiryDate >= IssueDate OR ExpiryDate IS NULL),
+    UNIQUE (DoctorID, TypeID)
+);
+
+CREATE TABLE IF NOT EXISTS Patients (
+    PatientID INT PRIMARY KEY,
+    FullName VARCHAR(150) NOT NULL,
+    BirthDate DATE NOT NULL CHECK (BirthDate < CURRENT_DATE),
+    Address VARCHAR(300) NOT NULL,
+    PolyclinicID INT NOT NULL REFERENCES Polyclinics (PolyclinicID) ON DELETE CASCADE ON UPDATE CASCADE,
+    OMSNumber VARCHAR(50) UNIQUE,
+    SNILS VARCHAR(20) UNIQUE,
+    PassportData VARCHAR(100) UNIQUE,
+    PhoneNumber VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Operations (
+    OperationID INT PRIMARY KEY,
+    PatientID INT NOT NULL REFERENCES Patients (PatientID) ON DELETE CASCADE ON UPDATE CASCADE,
+    DoctorID INT NOT NULL REFERENCES Doctors (DoctorID) ON DELETE CASCADE ON UPDATE CASCADE,
+    TypeID INT NOT NULL REFERENCES OperationTypes (TypeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    PlannedDate DATE,
+    PerformedDate DATE NOT NULL,
+    Outcome VARCHAR(100) NOT NULL CHECK (Outcome IN ('success', 'fatal', 'complications', 'canceled')),
+    Description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS PlacementJournal (
+    PlacementID INT PRIMARY KEY,
+    PatientID INT NOT NULL REFERENCES Patients (PatientID) ON DELETE CASCADE ON UPDATE CASCADE,
+    BedID INT NOT NULL REFERENCES Beds (BedID) ON DELETE CASCADE ON UPDATE CASCADE,
+    AdmissionDate DATE NOT NULL,
+    DischargeDate DATE CHECK (DischargeDate >= AdmissionDate OR DischargeDate IS NULL)
+);
+
+CREATE TABLE IF NOT EXISTS VisitJournal (
+    VisitID INT PRIMARY KEY,
+    PatientID INT NOT NULL REFERENCES Patients (PatientID) ON DELETE CASCADE ON UPDATE CASCADE,
+    OfficeID INT NOT NULL REFERENCES Offices (OfficeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    DoctorID INT REFERENCES Doctors (DoctorID) ON DELETE CASCADE ON UPDATE CASCADE,
+    VisitDate DATE NOT NULL CHECK (VisitDate <= CURRENT_DATE),
+    Complaints VARCHAR(500)
+);
+
+CREATE TABLE IF NOT EXISTS MedicalServices (
+    ServiceID INT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    ServiceType VARCHAR(150) NOT NULL,
+    PatientID INT NOT NULL REFERENCES Patients (PatientID) ON DELETE CASCADE ON UPDATE CASCADE,
+    EmployeeID INT NOT NULL REFERENCES Employees (EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE,
+    ServiceDate DATE NOT NULL CHECK (ServiceDate <= CURRENT_DATE),
+    Results TEXT,
+    Notes TEXT
+);
