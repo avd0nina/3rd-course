@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}onto-practice{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <a href="/" class="logo">onto-practice</a>
+    <span class="tagline">проверка приказов о практике</span>
+    <nav class="topnav">
+      <a href="/">Проверка приказа</a>
+      <a href="/ontology">Онтология</a>
+      <a href="/docs/onto-practice.pdf">Документация (PDF)</a>
+      <a href="/docs/onto-practice-source.zip">Исходники (zip)</a>
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <small>HermiT reasoner · owlready2 · FastAPI</small>
+  </footer>
+</body>
+</html>

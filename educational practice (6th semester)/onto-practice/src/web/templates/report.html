@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}
+{% if report.is_pending %}Обработка приказа · onto-practice
+{% elif report.is_error %}Ошибка обработки · onto-practice
+{% else %}Отчёт по приказу №{{ report.order.number }} · onto-practice{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if report.is_pending %}
+  <meta http-equiv="refresh" content="6">
+  <section class="card">
+    <a href="/" class="back">← На главную</a>
+    <h1>Обработка приказа…</h1>
+    <p class="muted">
+      Файл загружен. Сейчас vision-LLM построчно извлекает данные из страниц,
+      затем reasoner прогоняет правила. На бесплатной модели это занимает
+      <strong>5–10 минут</strong> — страница автоматически обновится, когда
+      отчёт будет готов.
+    </p>
+    <div class="progress-block">
+      <div class="spinner"></div>
+      <div>
+        <div><strong>Файл:</strong> {{ report.order.number }}</div>
+        <div class="muted small">ID отчёта: <code>{{ report.id }}</code></div>
+      </div>
+    </div>
+  </section>
+{% elif report.is_error %}
+  <section class="card">
+    <a href="/" class="back">← На главную</a>
+    <h1>Ошибка обработки</h1>
+    <p class="muted">При обработке приказа возникла ошибка:</p>
+    <pre class="error-block">{{ report.error_message }}</pre>
+    <p class="muted small">
+      Часто причина — лимиты бесплатной LLM (429 от провайдера) или таймаут.
+      Попробуйте загрузить файл ещё раз через несколько минут, либо переключите
+      модель в <code>.env</code> на платную.
+    </p>
+  </section>
+{% else %}
+<section class="card">
+  <a href="/" class="back">← Загрузить другой приказ</a>
+  <h1>Отчёт по приказу №{{ report.order.number }}</h1>
+
+  <div class="summary">
+    <div class="stat">
+      <span class="stat-label">Студентов</span>
+      <span class="stat-value">{{ report.order.student_count }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Нарушений</span>
+      <span class="stat-value {% if report.violation_count > 0 %}bad{% else %}good{% endif %}">
+        {{ report.violation_count }}
+      </span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Reasoner</span>
+      <span class="stat-value">
+        {% if report.reasoner_consistent %}
+          <span class="badge ok">{{ report.reasoner_used }} OK</span>
+        {% else %}
+          <span class="badge bad">inconsistent</span>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  {% if report.reasoner_error %}
+    <p class="muted small"><strong>Reasoner note:</strong> {{ report.reasoner_error }}</p>
+  {% endif %}
+
+  <h2>Параметры приказа</h2>
+  <table class="kv">
+    <tr><th>Номер</th><td>{{ report.order.number }}</td></tr>
+    <tr><th>Дата издания</th><td>{{ report.order.issue_date or '—' }}</td></tr>
+    <tr><th>Период практики</th><td>{{ report.order.practice_start or '—' }} → {{ report.order.practice_end or '—' }}</td></tr>
+    <tr><th>Направление</th><td>{{ report.order.program_code or '—' }} {{ report.order.program_name or '' }}</td></tr>
+    <tr><th>Тип практики</th><td>{{ report.order.practice_type or '—' }}</td></tr>
+  </table>
+
+  <h2>Нарушения</h2>
+  {% if not report.violations %}
+    <p class="ok-banner">Нарушений не обнаружено.</p>
+  {% else %}
+    <table class="violations">
+      <thead>
+        <tr>
+          <th>Правило</th>
+          <th>Студент</th>
+          <th>Описание</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in report.violations %}
+          {% set rule = rule_index.get(v.rule_id) %}
+          <tr class="severity-{{ v.severity }}">
+            <td>
+              <code>{{ v.rule_id }}</code>
+              {% if rule %}<div class="muted small">{{ rule.name }}</div>{% endif %}
+            </td>
+            <td>
+              {% if v.student_name %}
+                {{ v.student_name }}
+                {% if v.assignment_index %}<div class="muted small">строка #{{ v.assignment_index }}</div>{% endif %}
+              {% else %}
+                <span class="muted">приказ в целом</span>
+              {% endif %}
+            </td>
+            <td>
+              {{ v.message }}
+              {% if rule and rule.source %}<div class="muted small">источник: {{ rule.source }}</div>{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <h2>Применённые правила</h2>
+  <ul class="rules">
+    {% for r in report.rules %}
+      <li>
+        <code>{{ r.id }}</code> <strong>{{ r.name }}</strong>
+        <div class="muted small">{{ r.description }}{% if r.source %} · {{ r.source }}{% endif %}</div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

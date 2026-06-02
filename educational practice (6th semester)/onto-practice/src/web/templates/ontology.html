@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Онтологии · onto-practice{% endblock %}
+{% block content %}
+<section class="card">
+  <a href="/" class="back">← На главную</a>
+  <h1>Онтологии регламентов</h1>
+  <p class="muted">
+    Скачайте <code>.owl</code>-файл и откройте в <a href="https://protege.stanford.edu/" target="_blank">Protégé</a>
+    для редактирования. <strong>Final</strong> — рабочая онтология, которой
+    проверяются приказы. <strong>Draft</strong> — черновик, сгенерированный
+    LLM из текста регламента; перед использованием нужна ручная доводка.
+  </p>
+  <p>
+    📋 <a href="/ontology/workflow">Инструкция: как довести черновик до финального файла</a>
+  </p>
+
+  {% if uploaded %}
+    <p class="ok-banner">Финальная онтология обновлена.</p>
+  {% endif %}
+  {% if error %}
+    <p class="error-block">{{ error }}</p>
+  {% endif %}
+
+  <h2>Загрузить новую финальную онтологию</h2>
+  <form action="/ontology/upload" method="post" enctype="multipart/form-data" class="upload">
+    <label for="owl" class="file-label">
+      <span class="file-button">Выбрать .owl</span>
+      <span id="owl-name" class="file-name">файл не выбран</span>
+      <input id="owl" type="file" name="file" accept=".owl,application/rdf+xml" required
+             onchange="document.getElementById('owl-name').textContent = this.files[0]?.name || 'файл не выбран'">
+    </label>
+    <button type="submit" class="primary">Загрузить и заменить practice.owl</button>
+    <div class="muted small">
+      Файл валидируется через owlready2 (должен открываться как OWL).
+      Текущая версия автоматически бэкапится в <code>var/backups/</code>.
+    </div>
+  </form>
+
+  <h2>Скачать существующие</h2>
+  {% if not items %}
+    <p class="muted">Файлов пока нет.</p>
+  {% else %}
+    <table class="kv">
+      <thead>
+        <tr><th>Тип</th><th>Файл</th><th>Размер</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for it in items %}
+          <tr>
+            <td>
+              {% if it.kind == 'final' %}
+                <span class="badge ok">final</span>
+              {% else %}
+                <span class="badge warn">draft</span>
+              {% endif %}
+            </td>
+            <td><code>{{ it.name }}</code></td>
+            <td class="muted small">{{ it.size }} байт</td>
+            <td><a href="{{ it.url }}">скачать</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</section>
+{% endblock %}

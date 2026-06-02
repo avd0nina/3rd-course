@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Загрузка приказа · onto-practice{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Проверка приказа на соответствие регламенту</h1>
+  <p class="muted">
+    Загрузите PDF приказа о направлении студентов на практику. Система извлечёт
+    данные, прогонит через ризонер и покажет нарушения регламента ФИТ НГУ.
+  </p>
+
+  <form action="/check" method="post" enctype="multipart/form-data" class="upload">
+    <label for="file" class="file-label">
+      <span class="file-button">Выбрать файл</span>
+      <span id="file-name" class="file-name">файл не выбран</span>
+      <input id="file" type="file" name="file"
+             accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+             required
+             onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'файл не выбран'">
+    </label>
+    <div class="muted small">
+      Поддерживаются: <code>.pdf</code>, <code>.docx</code>, <code>.txt</code>.
+      Если PDF — скан, лучше открыть его в Word, сохранить как <code>.docx</code>
+      и загрузить — тогда точность распознавания ≈100%.
+    </div>
+
+    <div class="meta">
+      <div>
+        <strong>Регламент:</strong>
+        {% for reg in regulations %}<code>{{ reg }}</code>{% if not loop.last %}, {% endif %}{% endfor %}
+      </div>
+      <div>
+        <strong>LLM:</strong>
+        {% if llm_active %}
+          <span class="badge ok">подключён</span>
+        {% else %}
+          <span class="badge bad">не настроен — обработка PDF недоступна</span>
+        {% endif %}
+      </div>
+      <div class="muted small">
+        PDF идёт через OCR + LLM (5-10 мин на приказ, точность средняя).
+        DOCX/TXT идут напрямую в LLM (~30 сек, точность высокая).
+        Повторная загрузка того же файла берётся из кэша мгновенно.
+      </div>
+    </div>
+
+    <button type="submit" class="primary">Проверить</button>
+  </form>
+</section>
+{% endblock %}
