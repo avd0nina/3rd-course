@@ -1,0 +1,52 @@
+[project]
+name = "onto-practice"
+version = "0.1.0"
+description = "Compliance checker for student practice orders against ontology + SWRL rules"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "jinja2>=3.1",
+    "python-multipart>=0.0.20",
+    "owlready2>=0.46",
+    "pymupdf>=1.24",
+    "pdfplumber>=0.11",
+    "openai>=1.55",
+    "langchain>=0.3",
+    "langchain-openai>=0.2",
+    "pydantic>=2.9",
+    "python-dotenv>=1.0",
+    "install-jdk>=1.1",
+    "python-docx>=1.1",
+    "reportlab>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.7",
+    "pytest>=8.3",
+    "mypy>=1.13",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E402"]  # sys.path manipulation before imports is intentional
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
