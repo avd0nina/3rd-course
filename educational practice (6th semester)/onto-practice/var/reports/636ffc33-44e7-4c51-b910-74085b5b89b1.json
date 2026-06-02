@@ -1,0 +1,21 @@
+{
+  "id": "636ffc33-44e7-4c51-b910-74085b5b89b1",
+  "status": "error",
+  "error_message": "RuntimeError: Loader returned empty text for all pages",
+  "regulation_id": "practice",
+  "order": {
+    "number": "Приказ №0294 - 2 от 27.01.2026 (во изменение №0025-2 Гудков С.А.).pdf",
+    "issue_date": null,
+    "practice_start": null,
+    "practice_end": null,
+    "program_code": null,
+    "program_name": null,
+    "practice_type": null,
+    "student_count": 0
+  },
+  "rules": [],
+  "violations": [],
+  "reasoner_used": "HermiT",
+  "reasoner_consistent": true,
+  "reasoner_error": null
+}
