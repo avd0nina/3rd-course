@@ -1,0 +1,24 @@
+Metadata-Version: 2.4
+Name: onto-practice
+Version: 0.1.0
+Summary: Compliance checker for student practice orders against ontology + SWRL rules
+Requires-Python: <3.14,>=3.11
+Requires-Dist: fastapi>=0.115
+Requires-Dist: uvicorn[standard]>=0.32
+Requires-Dist: jinja2>=3.1
+Requires-Dist: python-multipart>=0.0.20
+Requires-Dist: owlready2>=0.46
+Requires-Dist: pymupdf>=1.24
+Requires-Dist: pdfplumber>=0.11
+Requires-Dist: openai>=1.55
+Requires-Dist: langchain>=0.3
+Requires-Dist: langchain-openai>=0.2
+Requires-Dist: pydantic>=2.9
+Requires-Dist: python-dotenv>=1.0
+Requires-Dist: install-jdk>=1.1
+Requires-Dist: python-docx>=1.1
+Requires-Dist: reportlab>=4.0
+Provides-Extra: dev
+Requires-Dist: ruff>=0.7; extra == "dev"
+Requires-Dist: pytest>=8.3; extra == "dev"
+Requires-Dist: mypy>=1.13; extra == "dev"
