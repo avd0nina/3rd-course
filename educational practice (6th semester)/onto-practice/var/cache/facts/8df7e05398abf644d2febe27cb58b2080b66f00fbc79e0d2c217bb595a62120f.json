@@ -1,0 +1,1103 @@
+{
+  "number": "УПО180068",
+  "issue_date": "2026-01-19",
+  "practice_start": "2026-02-02",
+  "practice_end": "2026-05-28",
+  "program_code": "09.03.01",
+  "program_name": "Информатика и вычислительная техника",
+  "practice_type": "Учебная практика (эксплуатационная практика)",
+  "practice_subtype": null,
+  "faculty": "Факультет информационных технологий",
+  "dean": "Лаврентьев Михаил Михайлович",
+  "approved_at": null,
+  "students": [
+    {
+      "full_name": "Авдонина Лада Вадимовна",
+      "group": "23202",
+      "record_book_number": "230741",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": "КафОИФИТ"
+      }
+    },
+    {
+      "full_name": "Агафонов Григорий Алексеевич",
+      "group": "23210",
+      "record_book_number": "230700",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Ј1аборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Найданов Чимит Антонович",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": "КафОИФИТ"
+      }
+    },
+    {
+      "full_name": "Алексеев Андрей Юрьевич",
+      "group": "23205",
+      "record_book_number": "230816",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Исмайылова Юлия Николаевна",
+        "position": "Доцент КафОИФИТ",
+        "department": "КафОИФИТ"
+      }
+    },
+    {
+      "full_name": "Антонов Матвей Владимирович",
+      "group": "23209",
+      "record_book_number": "230914",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Епишин Илья Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": "КафОИФИТ"
+      }
+    },
+    {
+      "full_name": "Артемьев Матвей Викторович",
+      "group": "23208",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "НГУ Лаборатория разработки программного обеспечения и систем на кристалле (ЛабРПО Фит), каб. 1127",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга. 4"
+      },
+      "supervisor": {
+        "full_name": "Власов Александр Александрович",
+        "position": "Доцент КафСИФИТ",
+        "department": "КафСИФИТ"
+      }
+    },
+    {
+      "full_name": "Астахов Ярослав Дмитриевич",
+      "group": "23207",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2). ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга. 4"
+      },
+      "supervisor": {
+        "full_name": "Зыкова Анастасия Алексеевна",
+        "position": "Старший преподаватель",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Бирюков Александр Алексеевич",
+      "group": "23211",
+      "record_book_number": "210712",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.З22",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Близнюк Никита Александрович",
+      "group": "23202",
+      "record_book_number": "230731",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Бреннер Роман Евгеньевич",
+      "group": "23201",
+      "record_book_number": "230919",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Бронников Максим Владиславович",
+      "group": "23201",
+      "record_book_number": "230635",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Бурлаков Артём Сергеевич",
+      "group": "23202",
+      "record_book_number": "230629",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117. г.Новосибирск, ул. Тимакова, 4."
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Бурлаков Илья Дмитриевич",
+      "group": "23206",
+      "record_book_number": "230672",
+      "course": null,
+      "location": {
+        "organization": "НГУ, Эксперименталь ная лаборатория (экспЈЈФит), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": "Трегубов Артем Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Валенко Оксана Павловна",
+      "group": "23203",
+      "record_book_number": "230681",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и приклщдной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090. г.Новосибирск, пр. Академика Коптюга. 4"
+      },
+      "supervisor": {
+        "full_name": "Яхьяева Гульнара Эркиновна",
+        "position": "Доцент КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Валова Ирина Викторовна",
+      "group": "23201",
+      "record_book_number": "230732",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Зыкова Анастасия Алексеевна",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Васильева Диана Кэскиловна",
+      "group": "23202",
+      "record_book_number": "230710",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4,"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Вишневский Алексей Александрович",
+      "group": "23201",
+      "record_book_number": "230680",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.З22",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Дроздова Вера Геннадьевна",
+        "position": "Доцент КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Власов Артём Леонидович",
+      "group": "23205",
+      "record_book_number": "230737",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.З22",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Исмайылова Юлия Николаевна",
+        "position": "Доцент КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Володин Илья Русланович",
+      "group": "23210",
+      "record_book_number": "230928",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": null,
+        "position": null,
+        "department": null
+      }
+    },
+    {
+      "full_name": "Глушко Илья Игоревич",
+      "group": "23201",
+      "record_book_number": "230736",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Горкунова Татьяна Сергеевна",
+      "group": "23208",
+      "record_book_number": "230913",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Епишин Илья Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Гридин Денис Олегович",
+      "group": "23206",
+      "record_book_number": "230721",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Гузенков Дмитрий Андреевич",
+      "group": "23207",
+      "record_book_number": "230662",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Доценко Никита Алексеевич",
+      "group": "23208",
+      "record_book_number": "230698",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Дуткин Семён Юрьевич",
+      "group": "23205",
+      "record_book_number": "230653",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.З22",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Найданов Чимит Антонович",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Зайчиков Олег Александрович",
+      "group": "23210",
+      "record_book_number": "230689",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Грегубов Артем Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Зималтынов Кирилл Русланович",
+      "group": "23212",
+      "record_book_number": "230726",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной ЛОГИКИ (Л2). ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Ипполитов Вадим Дмитриевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Зотова Софья Павловна",
+      "group": "23201",
+      "record_book_number": "220709",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Зуева Полина Геннадьевна",
+      "group": "23206",
+      "record_book_number": "230621",
+      "course": null,
+      "location": {
+        "organization": "ниинм. Лаборатория дифференциальн ой психофизиологи",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Зырянов Илья Александрович",
+      "group": "23205",
+      "record_book_number": "230805",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2). ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Исмайылова Юлия Николаевна",
+        "position": "Доцент КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Иванов Андрей Андреевич",
+      "group": "23204",
+      "record_book_number": "230625",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Исмайылова Юлия Николаевна",
+        "position": "Доцент КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Иноков Семён Шухратович",
+      "group": "23209",
+      "record_book_number": "230661",
+      "course": null,
+      "location": {
+        "organization": "нгу, Эксперименталь ная лаборатория (ЭкспЛФИТ), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": null,
+        "position": null,
+        "department": null
+      }
+    },
+    {
+      "full_name": "Котенева Олеся Алексеевна",
+      "group": null,
+      "record_book_number": "230647",
+      "course": null,
+      "location": {
+        "organization": "ИЦИГ СО РАН, Лаборатория психологической генетики",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Лаврентьева, д. 10"
+      },
+      "supervisor": {
+        "full_name": "Зубаирова Ульяна Станиславовна",
+        "position": "Старший преподаватель КафСИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Кузнецов Илья Максимович",
+      "group": null,
+      "record_book_number": "230703",
+      "course": null,
+      "location": {
+        "organization": "нгу, Эксперименталь ная лаборатория (ЭкспЛФИТ), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": "Трегубов Артем Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Лаухин Егор Денисович",
+      "group": null,
+      "record_book_number": "230711",
+      "course": null,
+      "location": {
+        "organization": "НГУ Эксперименталь ная лаборатория (экспЈIФИТ), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": "Лемешко Станислав Борисович",
+        "position": "Старший преподаватель КафСИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Ј1ексина Алина Александровна",
+      "group": null,
+      "record_book_number": "230813",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Мельников Константин Иванович",
+      "group": null,
+      "record_book_number": "230622",
+      "course": null,
+      "location": {
+        "organization": "ИНГГ СО РАН, Лаборатория динамических проблем сейсмики (572), каб.З21",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, З"
+      },
+      "supervisor": {
+        "full_name": "Дучков Антон Альбертович",
+        "position": "Доцент КафСИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Мурашев Артемий Дмитриевич",
+      "group": null,
+      "record_book_number": "230738",
+      "course": null,
+      "location": {
+        "organization": "нгу, Эксперименталь ная лаборатория (ЭкспЛФИТ), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": null,
+        "position": null,
+        "department": null
+      }
+    },
+    {
+      "full_name": "Попов Никита Александрович",
+      "group": "23212",
+      "record_book_number": "23212",
+      "course": null,
+      "location": {
+        "organization": "ИЦИГ СО РАН, Лаборатория психологической генетики",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Лаврентьева, д. 10"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Романов Родион Дмитриевич",
+      "group": "23212",
+      "record_book_number": "23212",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной ЛОГИКИ (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090. г.Новосибирск, пр. Академика Коптюга. 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Рудякова Анна Константиновна",
+      "group": "23207",
+      "record_book_number": "23207",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.новосибирск, ул. Тимакова, 4,"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Рябова Арина Романовна",
+      "group": "23208",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Епишин Илья Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Самохин Серафим Вадимович",
+      "group": "23205",
+      "record_book_number": "230733",
+      "course": null,
+      "location": {
+        "organization": "нгу, Эксперименталь ная лаборатория (ЭкспЛФИТ), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": "Трегубов Артем Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Селезнева Виктория Алексеевна",
+      "group": "23212",
+      "record_book_number": "230912",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Сенин Матвей Андреевич",
+      "group": "23209",
+      "record_book_number": "220763",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Дроздова Вера Геннадьевна",
+        "position": "Доцент Каф0ИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Слепченко Софья Васильевна",
+      "group": "23203",
+      "record_book_number": "230656",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Яхьяева Гульнара Эркиновна",
+        "position": "Доцент КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Солихов Руслан Махмаднабиеви",
+      "group": "23209",
+      "record_book_number": "230746",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Бондаренко Иван",
+        "position": "Доцент КафСИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Соловьев",
+      "group": null,
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": null,
+        "structural_unit": null,
+        "address": null
+      },
+      "supervisor": {
+        "full_name": null,
+        "position": null,
+        "department": null
+      }
+    },
+    {
+      "full_name": "Сорокин Матвей Павлович",
+      "group": "23201",
+      "record_book_number": "230788",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Яхьяева Гульнара Эркиновна",
+        "position": "Доцент",
+        "department": "КафОИФИТ 61."
+      }
+    },
+    {
+      "full_name": "Сосновская Анастасия Владимировна",
+      "group": "23212",
+      "record_book_number": "23091",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор",
+        "department": "КафОИФИТ 62."
+      }
+    },
+    {
+      "full_name": "Таскаев Арсений Владимирович",
+      "group": "23206",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Трегубов Артем Сергеевич",
+        "position": "Старший преподаватель",
+        "department": "КафОИФИТ 63."
+      }
+    },
+    {
+      "full_name": "Тришкин Данил Максимович",
+      "group": "23208",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Епишин Илья Сергеевич",
+        "position": "Старший преподаватель",
+        "department": "КафОИФИТ 64."
+      }
+    },
+    {
+      "full_name": "Халиков Вадим Рафаэльевич",
+      "group": "23209",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Хазанкин Григорий Романович",
+        "position": "Доцент",
+        "department": "КафОИФИТ 65."
+      }
+    },
+    {
+      "full_name": "Хамитов Артем Маратович",
+      "group": "23206",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Епишин Илья Сергеевич",
+        "position": "Старший преподаватель",
+        "department": "КафОИФИТ 66."
+      }
+    },
+    {
+      "full_name": "Хаплак Владлен Геннадьевич",
+      "group": "23202",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "НИИНМ, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор",
+        "department": "КафОИФИТ 67."
+      }
+    },
+    {
+      "full_name": "Хорьяков Иван Сергеевич",
+      "group": "23208",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.З22",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой",
+        "department": "КафОИФИТ 68."
+      }
+    },
+    {
+      "full_name": "Червонный Аркадий Александрович",
+      "group": "23201",
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор",
+        "department": "КафОИФИТ 69."
+      }
+    },
+    {
+      "full_name": "Чернова Мария Алексеевна",
+      "group": "23204",
+      "record_book_number": "230679",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Епишин Илья Сергеевич",
+        "position": "Старший преподаватель",
+        "department": "КафОИФИТ 70."
+      }
+    },
+    {
+      "full_name": "Черных Сергей Игоревич",
+      "group": "23202",
+      "record_book_number": "230636",
+      "course": null,
+      "location": {
+        "organization": "НГУ, Эксперименталь ная лаборатория (ЭкспЛФИТ), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": "Толкачева Екатерина Михайловна",
+        "position": "Старший преподаватель",
+        "department": "КафОИФИТ 71."
+      }
+    },
+    {
+      "full_name": "Шалабаев Тимур Маратович",
+      "group": "23202",
+      "record_book_number": "230806",
+      "course": null,
+      "location": {
+        "organization": "НГУ, Эксперименталь ная лаборатория (экспЈIФит), каб. 1123",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул. Пирогова, 1"
+      },
+      "supervisor": {
+        "full_name": "Толкачева Екатерина Михайловна",
+        "position": "Старший преподаватель",
+        "department": "КафОИФИТ 72."
+      }
+    },
+    {
+      "full_name": "Шарапов Владимир",
+      "group": null,
+      "record_book_number": null,
+      "course": null,
+      "location": {
+        "organization": null,
+        "structural_unit": null,
+        "address": null
+      },
+      "supervisor": {
+        "full_name": null,
+        "position": null,
+        "department": null
+      }
+    },
+    {
+      "full_name": "Андреев Андрей Андреевич",
+      "group": "23207",
+      "record_book_number": "230640",
+      "course": null,
+      "location": {
+        "organization": "ниинм, Лаборатория дифференциальн ой психофизиологи и",
+        "structural_unit": null,
+        "address": "630117, г.Новосибирск, ул. Тимакова, 4"
+      },
+      "supervisor": {
+        "full_name": "Савостьянов Александр Николаевич",
+        "position": "Профессор",
+        "department": "КафОИФИТ 60."
+      }
+    },
+    {
+      "full_name": "Александрович",
+      "group": "23212",
+      "record_book_number": "230718",
+      "course": null,
+      "location": {
+        "organization": "«Логарифмика»",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, ул.Николаева, д.12"
+      },
+      "supervisor": {
+        "full_name": "Сазонова Полина Андреевна",
+        "position": "Доцент",
+        "department": "Каф0ИФИТ"
+      }
+    },
+    {
+      "full_name": "Шарапов Иван Николаевич",
+      "group": "23204",
+      "record_book_number": "230655",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Исмайылова Юлия Николаевна",
+        "position": "Доцент",
+        "department": "Каф0ИФИТ"
+      }
+    },
+    {
+      "full_name": "Шевлякова Арина Максимовна",
+      "group": "23205",
+      "record_book_number": "230713",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Найданов Чимит Антонович",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Эстраих Глеб Сергеевич",
+      "group": "23209",
+      "record_book_number": "230657",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Трегубов Артем Сергеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Эшенбрейнер Варвара Андреевна",
+      "group": "23209",
+      "record_book_number": "230748",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Дроздова Вера Геннадьевна",
+        "position": "Доцент",
+        "department": "КафОИФИТ"
+      }
+    },
+    {
+      "full_name": "Юрченко Виктория Андреевна",
+      "group": "23211",
+      "record_book_number": "230695",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Ново сибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Пальчунов Дмитрий Евгеньевич",
+        "position": "Заведующий кафедрой КафОИФИТ",
+        "department": null
+      }
+    },
+    {
+      "full_name": "Якуба Мирослав Алексеевич",
+      "group": "23210",
+      "record_book_number": "230667",
+      "course": null,
+      "location": {
+        "organization": "ИМ СО РАН, Лаборатория теории вычислимости и прикладной логики (Л2), ком.322",
+        "structural_unit": null,
+        "address": "630090, г.Новосибирск, пр. Академика Коптюга, 4"
+      },
+      "supervisor": {
+        "full_name": "Трегубов Артем Сёргеевич",
+        "position": "Старший преподаватель КафОИФИТ",
+        "department": null
+      }
+    }
+  ]
+}
