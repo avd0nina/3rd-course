@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://onto-practice.local/practice.owl"
+         xmlns="http://onto-practice.local/practice.owl#">
+
+<owl:Ontology rdf:about="http://onto-practice.local/practice.owl"/>
+
+<owl:ObjectProperty rdf:about="#hasAssignment">
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="#Assignment"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#forStudent">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Assignment"/>
+  <rdfs:range rdf:resource="#Student"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#atLocation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Assignment"/>
+  <rdfs:range rdf:resource="#PracticeLocation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#supervisedBy">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Assignment"/>
+  <rdfs:range rdf:resource="#Supervisor"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#inDepartment">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Supervisor"/>
+  <rdfs:range rdf:resource="#Department"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasViolation">
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="#Violation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#violatesRule">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Violation"/>
+  <rdfs:range rdf:resource="#ViolationRule"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#concernsAssignment">
+  <rdfs:domain rdf:resource="#Violation"/>
+  <rdfs:range rdf:resource="#Assignment"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="#orderNumber">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#orderDate">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#practiceStart">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#practiceEnd">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#programCode">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#programName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#practiceType">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Order"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#studentName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Student"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#studentGroup">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Student"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#recordBookNumber">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Student"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#studentCourse">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Student"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#locationOrganization">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PracticeLocation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#locationAddress">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PracticeLocation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#supervisorName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Supervisor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#supervisorPosition">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Supervisor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#departmentName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Department"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#violationMessage">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Violation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#violationSeverity">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Violation"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ruleId">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ViolationRule"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ruleName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ViolationRule"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ruleDescription">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ViolationRule"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ruleSource">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#ViolationRule"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Order">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Приказ ректора о направлении на практику</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Assignment">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Запись о направлении конкретного студента на практику</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Student">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Обучающийся, направляемый на практику</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Supervisor">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Руководитель практики от университета (ППС)</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#PracticeLocation">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Место прохождения практики</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Department">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Кафедра</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#ViolationRule">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Правило проверки соответствия регламенту</rdfs:comment>
+</owl:Class>
+
+<owl:Class rdf:about="#Violation">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdfs:comment xml:lang="ru">Зафиксированное нарушение правила в приказе</rdfs:comment>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="#rule_R_01">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-01</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Заполнение обязательных полей</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">У каждого студента в приказе должны быть указаны: ФИО, группа, номер зачётной книжки, место практики (организация и адрес), руководитель и его кафедра.</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Приложения 1–3, стр. 28–33</ruleSource>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rule_R_02">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-02</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Корректное направление подготовки</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Приказ должен быть оформлен по направлению 09.03.01 «Информатика и вычислительная техника» (бакалавриат) или 09.04.01 (магистратура).</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">стр. 2</ruleSource>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rule_R_03">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-03</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Корректные сроки практики</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Дата начала практики должна предшествовать дате окончания.</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">здравый смысл</ruleSource>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rule_R_04">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-04</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Минимальный срок подготовки приказа</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Между датой издания приказа и датой начала практики должно быть не менее 30 календарных дней (приказ готовится не позднее чем за 1 месяц до начала практики).</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">стр. 9</ruleSource>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rule_R_05">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-05</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Назначен один руководитель от НГУ</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Каждому студенту в приказе должен быть назначен ровно один руководитель практики со стороны НГУ из числа ППС.</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">стр. 6</ruleSource>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rule_R_06">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-06</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Уникальность зачётных книжек</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Номера зачётных книжек студентов в приказе должны быть уникальны.</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">здравый смысл</ruleSource>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#rule_R_07">
+  <rdf:type rdf:resource="#ViolationRule"/>
+  <ruleId rdf:datatype="http://www.w3.org/2001/XMLSchema#string">R-07</ruleId>
+  <ruleName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Указан тип практики</ruleName>
+  <ruleDescription rdf:datatype="http://www.w3.org/2001/XMLSchema#string">В приказе должен быть указан вид практики: учебная или производственная.</ruleDescription>
+  <ruleSource rdf:datatype="http://www.w3.org/2001/XMLSchema#string">стр. 3</ruleSource>
+</owl:NamedIndividual>
+
+
+</rdf:RDF>
